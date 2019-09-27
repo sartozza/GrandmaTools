@@ -1,0 +1,38 @@
+# Don't track content of these folders
+CMake/
+CMakeFiles/
+bin/
+
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.sh
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.txt
+
+#Others files I do not actually use#
+#############
+GentleDimi.cpp
+GentleDimi.h
+Makefile
+main.cpp
+pLambda_1.cpp
+pLambda_1.h

@@ -2,7 +2,7 @@
 CMake/
 CMakeFiles/
 bin/
-
+.project
 
 # Compiled source #
 ###################
@@ -36,3 +36,4 @@ Makefile
 main.cpp
 pLambda_1.cpp
 pLambda_1.h
+cmake_install.cmake

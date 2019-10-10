@@ -96,7 +96,7 @@ public:
     void SetUpLambdaPars_pL(const TString& DataSample, const int& Variation_p, const int& Variation_L, double* lambda_pars);
     void SetUpLambdaPars_pXim(const TString& DataSample, const int& Variation_p, const int& Variation_Xim, double* lambda_pars);
 
-    void SetUpLambdaPars_pAp(const TString& DataSample, const int& Variation_p, double* lambda_pars);
+    void SetUpLambdaPars_pAp(const TString& DataSample, const int& Variation_p, const int& Variation_Ap, double* lambda_pars);
     void SetUpLambdaPars_pAL(const TString& DataSample, const int& Variation_p, const int& Variation_AL, double* lambda_pars);
     void SetUpLambdaPars_LAL(const TString& DataSample, const int& Variation_L, const int& Variation_AL, double* lambda_pars);
 
@@ -111,6 +111,7 @@ public:
     TH2F* GetResolutionMatrix(const TString& DataSample,const TString&& System);
     TH2F* GetResidualMatrix(const TString&& FinalSystem, const TString& InitialSystem);
     TH1F* GetAliceExpCorrFun(const TString& DataSample,const TString& System,const int& iReb);
+    TH1F* GetAliceExpCorrFunVar(const TString& DataSample,const TString& System,const int& iVar);
 
 private:
     void Clean_CommonAnaFunctions();

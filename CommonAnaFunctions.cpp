@@ -358,28 +358,28 @@ void DLM_CommonAnaFunctions::SetUpCats_pL(CATS& Kitty, const TString& POT, const
     if(POT=="LO"){
 //        ExternalWF = Init_pL_Haidenbauer(   "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/Haidenbauer/pLambdaLO_600/",
 //                                Kitty, 0, 600);
-        ExternalWF = Init_pL_Haidenbauer(   "/Users/Valentina/FemtoStuff/Haidenbauer/pLambdaLO_600/",
+        ExternalWF = Init_pL_Haidenbauer(   "/Users/sartozza/FemtoStuff/Haidenbauer/pLambdaLO_600/",
                                                         Kitty, 0, 600);
         NumChannels=2;
     }
     else if(POT=="LO_Coupled_S"){
-        ExternalWF = Init_pL_Haidenbauer(   "/Users/Valentina/FemtoStuff/Haidenbauer/pLambdaLO_Coupling/",
+        ExternalWF = Init_pL_Haidenbauer(   "/Users/sartozza/FemtoStuff/Haidenbauer/pLambdaLO_Coupling/",
                                 Kitty, 1, 600);
         NumChannels=4;
     }
     else if(POT=="NLO"){
-        ExternalWF = Init_pL_Haidenbauer(   "/Users/Valentina/FemtoStuff/Haidenbauer/pLambdaNLO/",
+        ExternalWF = Init_pL_Haidenbauer(   "/Users/sartozza/FemtoStuff/Haidenbauer/pLambdaNLO/",
                                 Kitty, 10, 600);
         NumChannels=2;
     }
     //s and p waves
     else if(POT=="NLO_sp"){
-        ExternalWF = Init_pL_Haidenbauer(   "/Users/Valentina/FemtoStuff/Haidenbauer/pLambdaNLO/",
+        ExternalWF = Init_pL_Haidenbauer(   "/Users/sartozza/FemtoStuff/Haidenbauer/pLambdaNLO/",
                                 Kitty, 12, 600);
         NumChannels=4;
     }
     else if(POT=="NLO_Coupled_S"){
-        ExternalWF = Init_pL_Haidenbauer(   "/Users/Valentina/FemtoStuff/Haidenbauer/pLambdaNLO_Coupling/",
+        ExternalWF = Init_pL_Haidenbauer(   "/Users/sartozza/FemtoStuff/Haidenbauer/pLambdaNLO_Coupling/",
                                 Kitty, 11, 600);
         NumChannels=4;
     }
@@ -697,12 +697,12 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
     if(POT=="HAIDE_1"){//only ppbar->ppbar
 //        ExternalWF = Init_pL_Haidenbauer(   "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/Haidenbauer/pLambdaLO_600/",
 //                                Kitty, 0, 600);
-        ExternalWF=Init_pantip_Haidenbauer("/Users/Valentina/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,0);//type = 1 takes both ppbar->ppbar + ppbar->nnbar
+        ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,0);//type = 1 takes both ppbar->ppbar + ppbar->nnbar
 
         NumChannels=2;
     }
     else if(POT=="HAIDE_2"){//ppbar->ppbar + nnbar->ppbar
-      ExternalWF=Init_pantip_Haidenbauer("/Users/Valentina/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,1);//type = 1 takes both ppbar->ppbar + ppbar->nnbar
+      ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,1);//type = 1 takes both ppbar->ppbar + ppbar->nnbar
 
         NumChannels=4;
     }
@@ -1296,10 +1296,11 @@ void DLM_CommonAnaFunctions::GetFractions_Ap(const TString& DataSample, const in
   //1 = from Lambda
   //2 = other feeddown (flat)
   //3 = missidentified
-  double Modify_pAp=1;
+  double Modify_pAp;
   switch(Variation){
-      case 0 : Modify_pAp=0.8; break;
-      case 1 : Modify_pAp=1.2; break;
+      case 0 : Modify_pAp=1.; break;
+      case 1 : Modify_pAp=0.8; break;
+      case 2 : Modify_pAp=1.2; break;
       default : Modify_pAp=1; break;
   }
   double pAp_f0;//primary protons
@@ -1316,8 +1317,10 @@ void DLM_CommonAnaFunctions::GetFractions_Ap(const TString& DataSample, const in
         // pAp_f1 = 0.0843;
         // pAp_f0 = 0.845975;//calculations from 24.06.2019
         // pAp_f1 = 0.100644;
-        pAp_f0 = 0.833596;//calculations from 29.06.2019 TFractionFitter
-        pAp_f1 = 0.116024;
+//        pAp_f0 = 0.833596;//calculations from 29.06.2019 TFractionFitter
+//        pAp_f1 = 0.116024;
+        pAp_f0 = 0.82266;//calculations from Andi update on MC 5% 27.09.2019 TFractionFitter
+        pAp_f1 = 0.124465;
     }
   else{
       printf("\033[1;31mERROR:\033[0m The data sample '%s' does not exist\n",DataSample.Data());
@@ -1344,11 +1347,12 @@ void DLM_CommonAnaFunctions::GetFractions_p(const TString& DataSample, const int
     //1 = from Lambda
     //2 = other feeddown (flat)
     //3 = missidentified
-    double Modify_pp=1;
+    double Modify_pp;
     switch(Variation){
-        case 0 : Modify_pp=0.8; break;
-        case 1 : Modify_pp=1.2; break;
-        default : Modify_pp=1; break;
+        case 0 : Modify_pp=1.; break;
+        case 1 : Modify_pp=0.8; break;
+        case 2 : Modify_pp=1.2; break;
+        default : Modify_pp=1.; break;
     }
     double pp_f0;//primary protons
     double pp_f1;//fraction of Lambda
@@ -1374,8 +1378,10 @@ void DLM_CommonAnaFunctions::GetFractions_p(const TString& DataSample, const int
          pp_f1 = 0.114904;
     }
     else if(DataSample=="pp13TeV_HM_BBar"){
-         pp_f0 = 0.83531;//calculations from 29.07.2019 from TFractionFitter
-         pp_f1 = 0.114904;
+//         pp_f0 = 0.83531;//calculations from 29.07.2019 from TFractionFitter
+//         pp_f1 = 0.114904;
+         pp_f0 = 0.82164;//calculations from Andi update on MC 5% 27.09.2019 TFractionFitter
+         pp_f1 = 0.125253;
     }
     else{
         printf("\033[1;31mERROR:\033[0m The data sample '%s' does not exist\n",DataSample.Data());
@@ -1390,9 +1396,9 @@ void DLM_CommonAnaFunctions::GetFractions_p(const TString& DataSample, const int
     // printf("--------------------------------------------------------------\n");
     // printf("---------------DATASample analysed = %s-----------------------\n",DataSample.Data());
     // printf("-----------------------PROTONS--------------------------------\n");
-    // printf("Fractions of primaries = %.3f\n", Fractions[0]);
-    // printf("Fractions of Sec.from Λ = %.3f\n", Fractions[1]);
-    // printf("Fractions of Sec.from Σ+ = %.3f\n", Fractions[2]);
+     printf("Fractions of primaries = %.3f\n", Fractions[0]);
+     printf("Fractions of Sec.from Λ = %.3f\n", Fractions[1]);
+     printf("Fractions of Sec.from Σ+ = %.3f\n", Fractions[2]);
 
 }
 //Variation -> use the two digits
@@ -1400,16 +1406,16 @@ void DLM_CommonAnaFunctions::GetFractions_p(const TString& DataSample, const int
 //second digit->Modify_XiL
 //0 -> default; 1 = -20%; 2 = +20%
 void DLM_CommonAnaFunctions::GetFractions_AL(const TString& DataSample, const int& Variation, double* Fractions){
-  double Modify_SigAL=1;
-  double Modify_XiAL=1;
+  double Modify_SigAL;
+  double Modify_XiAL;
   switch(Variation%10){
-      case 0 : Modify_SigAL=1; break;
+      case 0 : Modify_SigAL=1.; break;
       case 1 : Modify_SigAL=0.8;break;
       case 2 : Modify_SigAL=1.2; break;
       default : Modify_SigAL=1; break;
   }
   switch(Variation/10){
-      case 0 : Modify_XiAL=1; break;
+      case 0 : Modify_XiAL=1.; break;
       case 1 : Modify_XiAL=0.8;break;
       case 2 : Modify_XiAL=1.2; break;
       default : Modify_XiAL=1; break;
@@ -1473,19 +1479,19 @@ void DLM_CommonAnaFunctions::GetFractions_AL(const TString& DataSample, const in
 }
 
 void DLM_CommonAnaFunctions::GetFractions_L(const TString& DataSample, const int& Variation, double* Fractions){
-    double Modify_SigL=1;
-    double Modify_XiL=1;
+    double Modify_SigL;
+    double Modify_XiL;
     switch(Variation%10){
-        case 0 : Modify_SigL=1; break;
+        case 0 : Modify_SigL=1.; break;
         case 1 : Modify_SigL=0.8;break;
         case 2 : Modify_SigL=1.2; break;
-        default : Modify_SigL=1; break;
+        default : Modify_SigL=1.; break;
     }
     switch(Variation/10){
-        case 0 : Modify_XiL=1; break;
+        case 0 : Modify_XiL=1.; break;
         case 1 : Modify_XiL=0.8;break;
         case 2 : Modify_XiL=1.2; break;
-        default : Modify_XiL=1; break;
+        default : Modify_XiL=1.; break;
     }
     double pL_f0;//fraction of primary Lambdas
     double pL_f1;//fraction of Sigma0
@@ -1587,19 +1593,18 @@ void DLM_CommonAnaFunctions::GetFractions_Xim(const TString& DataSample, const i
 //2 is flat feed
 //3 is missid
 
-void DLM_CommonAnaFunctions::SetUpLambdaPars_pAp(const TString& DataSample, const int& Variation_Ap, double* lambda_pars){
+void DLM_CommonAnaFunctions::SetUpLambdaPars_pAp(const TString& DataSample, const int& Variation_p, const int& Variation_Ap, double* lambda_pars){
   double Purities_Ap[4];
   double Fraction_Ap[4];
   double Purities_p[4];
   double Fraction_p[4];
   GetPurities_Ap(DataSample,Variation_Ap,Purities_Ap);
   GetFractions_Ap(DataSample,Variation_Ap,Fraction_Ap);
-  GetPurities_p(DataSample,Variation_Ap,Purities_p);
-  GetFractions_p(DataSample,Variation_Ap,Fraction_p);
+  GetPurities_p(DataSample,Variation_p,Purities_p);
+  GetFractions_p(DataSample,Variation_p,Fraction_p);
   lambda_pars[0] = Purities_Ap[0]*Fraction_Ap[0]*Purities_p[0]*Fraction_p[0];
   lambda_pars[1] = Purities_Ap[0]*Fraction_Ap[0]*Purities_p[1]*Fraction_p[1]+Purities_Ap[1]*Fraction_Ap[1]*Purities_p[0]*Fraction_p[0];
   lambda_pars[3] = Purities_Ap[0]*Fraction_Ap[0]*Purities_p[3]*Fraction_Ap[3]+Purities_Ap[3]*Fraction_Ap[3]*Purities_p[0]*Fraction_Ap[0];
-//  lambda_pars[3] = (Purities_Ap[0]+Purities_Ap[0]+Purities_Ap[3])*Purities_Ap[3];
   lambda_pars[2] = 1.-lambda_pars[3]-lambda_pars[1]-lambda_pars[0];
   // std::cout<<"Lambda parameters for ppbar:\n"<<std::endl;
   // std::cout<<"Primaries = "<<lambda_pars[0]<<std::endl;
@@ -1904,10 +1909,10 @@ TH2F* DLM_CommonAnaFunctions::GetResolutionMatrix(const TString& DataSample,cons
         FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pPb_5TeV/ResolutionMatrices/Sample3_MeV_compact.root";
     }
     else if(DataSample=="pp13TeV_MB_BBar"){
-        FileName = "/Users/Valentina/Desktop/SystematicsAndCalib/ppRun2_MB/Sample6_MeV_compact.root";
+        FileName = "/Users/sartozza/Desktop/SystematicsAndCalib/ppRun2_MB/Sample6_MeV_compact.root";
     }
     else if(DataSample=="pp13TeV_HM_BBar"){
-        FileName = "/Users/Valentina/Desktop/SystematicsAndCalib/ppRun2_MB/Sample6_MeV_compact.root";
+        FileName = "/Users/sartozza/Desktop/SystematicsAndCalib/ppRun2_MB/Sample6_MeV_compact.root";
     }
     else{
         printf("\033[1;31mERROR:\033[0m The data sample '%s' does not exist\n",DataSample.Data());
@@ -1960,7 +1965,7 @@ TH2F* DLM_CommonAnaFunctions::GetResidualMatrix(const TString&& FinalSystem, con
 
 //    FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/DecayMatrices/run2_decay_matrices_old.root";
 //    FileName = "/Users/Valentina/Desktop/SystematicsAndCalib/ppRun2_MB/run2_decay_matrices_old.root";
-    FileName = "/Users/Valentina/Desktop/SystematicsAndCalib/ppRun2_MB/DM_170719.root";
+    FileName = "/Users/sartozza/Desktop/SystematicsAndCalib/ppRun2_MB/DM_170719.root";
 
     if(FinalSystem=="pp"&&InitialSystem=="pLambda"){
         HistoName = "hRes_pp_pL";
@@ -2072,15 +2077,15 @@ TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFun(const TString& DataSample,const
         }
     } else if(DataSample=="pp13TeV_MB_BBar"){
             if(System=="ppbar"){
-                FileName = "/Users/Valentina/cernbox/Analysis/BBbar/GentleFemto_Output/data/MB/CFOutput_pAp_App_full.root";
+                FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/MB/CFOutput_pAp_App_full.root";
                 HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
             }
             else if(System=="pLambdabar"){
-                FileName = "/Users/Valentina/cernbox/Analysis/BBbar/GentleFemto_Output/data/MB/CFOutput_pAL_ApL_full.root";
+                FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/MB/CFOutput_pAL_ApL_full.root";
                 HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
             }
             else if(System=="LambdaLambdabar"){
-                FileName = "/Users/Valentina/cernbox/Analysis/BBbar/GentleFemto_Output/data/MB/CFOutput_LAL_ALL_full.root";
+                FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/MB/CFOutput_LAL_ALL_full.root";
                 HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
                 // std::cout<<"Reading LLbar root file, works fine?\n"<<"HistoName = "<<HistoName<<std::endl;
             }
@@ -2089,15 +2094,15 @@ TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFun(const TString& DataSample,const
             }
         }else if(DataSample=="pp13TeV_HM_BBar"){
                 if(System=="ppbar"){
-                    FileName = "/Users/Valentina/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAp_App_full.root";
+                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAp_App_full.root";
                     HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
                 }
                 else if(System=="pLambdabar"){
-                    FileName = "/Users/Valentina/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAL_ApL_full.root";
+                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAL_ApL_full.root";
                     HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
                 }
                 else if(System=="LambdaLambdabar"){
-                    FileName = "/Users/Valentina/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_LAL_ALL_full.root";
+                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_LAL_ALL_full.root";
                     HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
                     // std::cout<<"Reading LLbar root file, works fine?\n"<<"HistoName = "<<HistoName<<std::endl;
                 }
@@ -2112,6 +2117,41 @@ TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFun(const TString& DataSample,const
 
     TFile* FileROOT = new TFile(FileName, "read");
     TH1F* histo = (TH1F*)FileROOT->Get(HistoName);
+    if(!histo){printf("\033[1;31mERROR:\033[0m The histo '%s' does not exist\n",HistoName.Data());return NULL;}
+    TString Name = histo->GetName();
+    gROOT->cd();
+    TH1F *histoCopy = (TH1F*)histo->Clone("histoCopy");
+    delete FileROOT;
+    histoCopy->SetName(Name);
+    return histoCopy;
+}
+
+TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFunVar(const TString& DataSample,const TString& System,const int& iVar){
+    TString FileName;
+    TString HistoName;
+
+if(DataSample=="pp13TeV_HM_BBar"){
+                if(System=="ppbar"){
+                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/Systematics/HMNanoAOD/SyspAp/Systematics_pAp_reb1_def.root";
+                    HistoName = TString::Format("histVar_%i",iVar);
+                }
+                else if(System=="pLambdabar"){
+                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/Systematics/HMNanoAOD/SyspAL/Systematics_pAL_reb3_def.root";
+                    HistoName = TString::Format("histVar_%i",iVar);
+                }
+                else if(System=="LambdaLambdabar"){
+                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/Systematics/HMNanoAOD/SysLAL/Systematics_LAL_reb4_def.root";
+                    HistoName = TString::Format("histVar_%i",iVar);
+                    // std::cout<<"Reading LLbar root file, works fine?\n"<<"HistoName = "<<HistoName<<std::endl;
+                }
+                else{
+                    printf("\033[1;31mERROR:\033[0m The system '%s' does not exist\n",System.Data());
+                }
+            }
+
+    TFile* FileROOT = new TFile(FileName, "read");
+    TDirectory* dirROOT = FileROOT->GetDirectory("Raw");
+    TH1F* histo = (TH1F*)dirROOT->Get(HistoName);
     if(!histo){printf("\033[1;31mERROR:\033[0m The histo '%s' does not exist\n",HistoName.Data());return NULL;}
     TString Name = histo->GetName();
     gROOT->cd();

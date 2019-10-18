@@ -43,6 +43,7 @@ public:
     void SetUpCats_pp(CATS& Kitty, const TString& POT, const TString& SOURCE);
     void SetUpCats_pAp(CATS& Kitty, const TString& POT, const TString& SOURCE);
     void SetUpCats_pApHaide(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& DataSample);
+    void SetUpCats_pApCoulomb(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& DataSample);
 
     //POT:
     //  "LO"
@@ -110,7 +111,7 @@ public:
 
     TH2F* GetResolutionMatrix(const TString& DataSample,const TString&& System);
     TH2F* GetResidualMatrix(const TString&& FinalSystem, const TString& InitialSystem);
-    TH1F* GetAliceExpCorrFun(const TString& DataSample,const TString& System,const int& iReb);
+    TH1F* GetAliceExpCorrFun(const TString& DataSample,const TString& System,const int& iReb,const int& iSph);
     TH1F* GetAliceExpCorrFunVar(const TString& DataSample,const TString& System,const int& iVar);
 
 private:

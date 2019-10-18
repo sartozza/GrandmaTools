@@ -2009,73 +2009,13 @@ TH2F* DLM_CommonAnaFunctions::GetResidualMatrix(const TString&& FinalSystem, con
 }
 
 //iReb = 0 is 4 MeV, 1 is 8, 2 is 12, 3 is 16, 4 is 20
-TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFun(const TString& DataSample,const TString& System,const int& iReb){
+TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFun(const TString& DataSample,
+		const TString& System,const int& iReb,const int& iSph){
     TString FileName;
     TString HistoName;
 
-    if(DataSample=="pp13TeV_MB_Run2paper"){
-        if(System=="pp"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pp_13TeV/Sample8/CFOutput_pp.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else if(System=="pLambda"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pp_13TeV/Sample8/CFOutput_pL.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else if(System=="LambdaLambda"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pp_13TeV/Sample8/CFOutput_LL.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else if(System=="pXim"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pp_13TeV/Sample8/CFOutput_pXi.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else{
-            printf("\033[1;31mERROR:\033[0m The system '%s' does not exist\n",System.Data());
-        }
-    }
-    else if(DataSample=="pp13TeV_HM_March19"){
-        if(System=="pp"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pp_13TeV/Sample10HM/CFOutput_pp.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else if(System=="pLambda"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pp_13TeV/Sample10HM/CFOutput_pL.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else if(System=="LambdaLambda"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pp_13TeV/Sample10HM/CFOutput_LL.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else if(System=="pXim"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pp_13TeV/Sample10HM/CFOutput_pXi.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else{
-            printf("\033[1;31mERROR:\033[0m The system '%s' does not exist\n",System.Data());
-        }
-    }
-    else if(DataSample=="pPb5TeV_Run2paper"){
-        if(System=="pp"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pPb_5TeV/Sample10/CFOutput_pp.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else if(System=="pLambda"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pPb_5TeV/Sample10/CFOutput_pL.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else if(System=="LambdaLambda"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pPb_5TeV/Sample10/CFOutput_LL.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else if(System=="pXim"){
-            FileName = "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/ALICE_pPb_5TeV/Sample10/CFOutput_pXi.root";
-            HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
-        }
-        else{
-            printf("\033[1;31mERROR:\033[0m The system '%s' does not exist\n",System.Data());
-        }
-    } else if(DataSample=="pp13TeV_MB_BBar"){
+
+  if(DataSample=="pp13TeV_MB_BBar"){
             if(System=="ppbar"){
                 FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/MB/CFOutput_pAp_App_full.root";
                 HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
@@ -2094,15 +2034,19 @@ TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFun(const TString& DataSample,const
             }
         }else if(DataSample=="pp13TeV_HM_BBar"){
                 if(System=="ppbar"){
-                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAp_App_full.root";
-                    HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
+//                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAp_App_full.root";
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/Raw_CF/CFOutput_pAp_%i.root",
+                    		iSph);
+                    HistoName = "hCk_ReweightedMeV_0";
                 }
                 else if(System=="pLambdabar"){
-                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAL_ApL_full.root";
+//                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAL_ApL_full.root";
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/Raw_CF/CFOutput_pAL_%i.root",iSph);
                     HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
                 }
                 else if(System=="LambdaLambdabar"){
-                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_LAL_ALL_full.root";
+//                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_LAL_ALL_full.root";
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/Raw_CF/CFOutput_LAL_%i.root",iSph);
                     HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
                     // std::cout<<"Reading LLbar root file, works fine?\n"<<"HistoName = "<<HistoName<<std::endl;
                 }

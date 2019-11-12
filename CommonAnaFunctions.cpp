@@ -32,6 +32,60 @@ DLM_CommonAnaFunctions::~DLM_CommonAnaFunctions(){
 void DLM_CommonAnaFunctions::SetUpCats_pAp(CATS& Kitty, const TString& POT, const TString& SOURCE){
   std::cout<<"SetUpCats_pAp dummy \n"<<std::endl;
 }
+// Proton-AntiProton ONLY COULOMB
+void DLM_CommonAnaFunctions::SetUpCats_pApCoulomb(CATS& Kitty, const TString& POT, const TString& SOURCE,
+		 const TString& DataSample){
+
+    CATSparameters* cPars = NULL;
+    double radius;
+    if(DataSample=="pp13TeV_MB_BBar") radius=1.188;
+    if(DataSample=="pp13TeV_HM_BBar") radius=1.28;
+
+    if(SOURCE=="Gauss"){
+        cPars = new CATSparameters(CATSparameters::tSource,1,true);
+        cPars->SetParameter(0,radius);
+        Kitty.SetAnaSource(GaussSource, *cPars);
+        Kitty.SetUseAnalyticSource(true);
+    }
+    else if(SOURCE=="McGauss_Reso"){
+        CleverMcLevyReso[1].InitStability(1,2-1e-6,2+1e-6);
+        CleverMcLevyReso[1].InitScale(35,0.25,2.0);
+        CleverMcLevyReso[1].InitRad(256,0,64);
+        CleverMcLevyReso[1].InitType(2);
+        CleverMcLevyReso[1].InitReso(0,1);
+        CleverMcLevyReso[1].InitReso(1,1);
+        CleverMcLevyReso[1].SetUpReso(0,0,1.-0.3578,1361.52,1.65,Mass_p,Mass_pic);
+        CleverMcLevyReso[1].SetUpReso(1,0,1.-0.3562,1462.93,4.69,Mass_L,Mass_pic);
+        CleverMcLevyReso[1].InitNumMcIter(1000000);
+        Kitty.SetAnaSource(CatsSourceForwarder, &CleverMcLevyReso[1], 2);
+        Kitty.SetAnaSource(0,0.87);
+        Kitty.SetAnaSource(1,2.0);
+        Kitty.SetUseAnalyticSource(true);
+    }
+    else{
+        printf("\033[1;31mERROR:\033[0m Non-existing source '%s'\n",SOURCE.Data());
+        goto CLEAN_SetUpCats_pApCoulomb;
+    }
+
+    Kitty.SetMomentumDependentSource(false);
+    Kitty.SetThetaDependentSource(false);
+    Kitty.SetExcludeFailedBins(false);
+
+    Kitty.SetQ1Q2(-1);
+    Kitty.SetPdgId(2212, -2212);
+    Kitty.SetRedMass( (Mass_p*Mass_p)/(Mass_p+Mass_p) );
+
+    Kitty.SetNumChannels(2);
+    Kitty.SetNumPW(0,1);
+    Kitty.SetNumPW(1,1);
+    Kitty.SetSpin(0,0);
+    Kitty.SetSpin(1,1);
+    Kitty.SetChannelWeight(0, 1./4.);
+    Kitty.SetChannelWeight(1, 3./4.);
+
+    CLEAN_SetUpCats_pApCoulomb: ;
+
+}
 //POT:
 //  "AV18"
 void DLM_CommonAnaFunctions::SetUpCats_pp(CATS& Kitty, const TString& POT, const TString& SOURCE){
@@ -2035,18 +2089,18 @@ TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFun(const TString& DataSample,
         }else if(DataSample=="pp13TeV_HM_BBar"){
                 if(System=="ppbar"){
 //                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAp_App_full.root";
-                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/Raw_CF/CFOutput_pAp_%i.root",
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/Raw_CF/CFOutput_pAp_%i.root",
                     		iSph);
                     HistoName = "hCk_ReweightedMeV_0";
                 }
                 else if(System=="pLambdabar"){
 //                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAL_ApL_full.root";
-                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/Raw_CF/CFOutput_pAL_%i.root",iSph);
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/Raw_CF/CFOutput_pAL_%i.root",iSph);
                     HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
                 }
                 else if(System=="LambdaLambdabar"){
 //                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_LAL_ALL_full.root";
-                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/Raw_CF/CFOutput_LAL_%i.root",iSph);
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/Raw_CF/CFOutput_LAL_%i.root",iSph);
                     HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
                     // std::cout<<"Reading LLbar root file, works fine?\n"<<"HistoName = "<<HistoName<<std::endl;
                 }

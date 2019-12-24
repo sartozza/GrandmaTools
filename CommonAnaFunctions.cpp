@@ -720,7 +720,7 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
 
     double radius;
     if(DataSample=="pp13TeV_MB_BBar") radius=1.188;
-    if(DataSample=="pp13TeV_HM_BBar") radius=1.28;
+    if(DataSample=="pp13TeV_HM_BBar") radius=1.25;
 
     if(SOURCE=="Gauss"){
         cPars = new CATSparameters(CATSparameters::tSource,1,true);
@@ -788,7 +788,7 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
 
     }//end of for
 //Kitty.KillTheCat();
-//printf("------------------------");
+
     CLEAN_SetUpCats_pApHaide: ;
 
     if(cPars){delete cPars; cPars=NULL;}
@@ -797,7 +797,6 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
     if(cPotPars1S0){delete cPotPars1S0; cPotPars1S0=NULL;}
     if(cPotPars3S1){delete cPotPars3S1; cPotPars3S1=NULL;}
     CleanUpWfHisto(Kitty,ExternalWF);
-
 }
 
 //----------------------SETTING UP BINNING---------------------------
@@ -1388,10 +1387,10 @@ void DLM_CommonAnaFunctions::GetFractions_Ap(const TString& DataSample, const in
   Fractions[3] = 1.;
   // printf("--------------------------------------------------------------\n");
   // printf("---------------DATASample analysed = %s-----------------------\n",DataSample.Data());
-  // printf("-----------------------ANTIPROTONS----------------------------\n");
-  // printf("Fractions of primaries = %.3f\n", Fractions[0]);
-  // printf("Fractions of Sec.from Λ = %.3f\n", Fractions[1]);
-  // printf("Fractions of Sec.from Σ+ = %.3f\n", Fractions[2]);
+  printf("-----------------------ANTIPROTONS----------------------------\n");
+  printf("Fractions of primaries = %.3f\n", Fractions[0]);
+  printf("Fractions of Sec.from Λ = %.3f\n", Fractions[1]);
+  printf("Fractions of Sec.from Σ+ = %.3f\n", Fractions[2]);
 
 }
 void DLM_CommonAnaFunctions::GetFractions_p(const TString& DataSample, const int& Variation, double* Fractions){
@@ -1449,7 +1448,7 @@ void DLM_CommonAnaFunctions::GetFractions_p(const TString& DataSample, const int
     Fractions[3] = 1.;
     // printf("--------------------------------------------------------------\n");
     // printf("---------------DATASample analysed = %s-----------------------\n",DataSample.Data());
-    // printf("-----------------------PROTONS--------------------------------\n");
+    printf("-----------------------PROTONS--------------------------------\n");
      printf("Fractions of primaries = %.3f\n", Fractions[0]);
      printf("Fractions of Sec.from Λ = %.3f\n", Fractions[1]);
      printf("Fractions of Sec.from Σ+ = %.3f\n", Fractions[2]);
@@ -1517,18 +1516,18 @@ void DLM_CommonAnaFunctions::GetFractions_AL(const TString& DataSample, const in
   Fractions[4] = 1.;
   // printf("--------------------------------------------------------------\n");
   // printf("---------------DATASample analysed = %s-----------------------\n",DataSample.Data());
-  // printf("-----------------------ANTILAMBDAS----------------------------\n");
-  //     printf("Modify_SigL = %.1f ---- Modify_XiL = %.1f\n",Modify_SigAL,Modify_XiAL);
-  // printf("Fractions of primaries = %.3f\n", Fractions[0]);
-  // printf("Fractions of Sec.from Σ0 = %.3f\n", Fractions[1]);
-  // printf("Fractions of Sec.from Ξm0 = %.3f\n", Fractions[2]);
-  // std::cout<<"Fractions for Lambdabar:\n"<<std::endl;
-  // std::cout<<"Primaries = "<<Fractions[0]<<std::endl;
-  // std::cout<<"From Sigma0 = "<<Fractions[1]<<std::endl;
-  // std::cout<<"From Xim = "<<Fractions[2]<<std::endl;
-  // std::cout<<"Flat feed = "<<Fractions[3]<<std::endl;
-  // std::cout<<"MisID = "<<Fractions[4]<<std::endl;
-  // std::cout<<"----------------------------\n"<<std::endl;
+  printf("-----------------------ANTILAMBDAS----------------------------\n");
+      printf("Modify_SigL = %.1f ---- Modify_XiL = %.1f\n",Modify_SigAL,Modify_XiAL);
+  printf("Fractions of primaries = %.3f\n", Fractions[0]);
+  printf("Fractions of Sec.from Σ0 = %.3f\n", Fractions[1]);
+  printf("Fractions of Sec.from Ξm0 = %.3f\n", Fractions[2]);
+  std::cout<<"Fractions for Lambdabar:\n"<<std::endl;
+  std::cout<<"Primaries = "<<Fractions[0]<<std::endl;
+  std::cout<<"From Sigma0 = "<<Fractions[1]<<std::endl;
+  std::cout<<"From Xim = "<<Fractions[2]<<std::endl;
+  std::cout<<"Flat feed = "<<Fractions[3]<<std::endl;
+  std::cout<<"MisID = "<<Fractions[4]<<std::endl;
+  std::cout<<"----------------------------\n"<<std::endl;
 
 }
 
@@ -1605,18 +1604,18 @@ void DLM_CommonAnaFunctions::GetFractions_L(const TString& DataSample, const int
     Fractions[4] = 1.;
     // printf("--------------------------------------------------------------\n");
     // printf("---------------DATASample analysed = %s-----------------------\n",DataSample.Data());
-    // printf("-----------------------LAMBDAS--------------------------------\n");
-    // printf("Modify_SigL = %.1f ---- Modify_XiL = %.1f\n",Modify_SigL,Modify_XiL);
-    // printf("Fractions of primaries = %.3f\n", Fractions[0]);
-    // printf("Fractions of Sec.from Σ0 = %.3f\n", Fractions[1]);
-    // printf("Fractions of Sec.from Ξm0 = %.3f\n", Fractions[2]);
-    // std::cout<<"Fractions for Lambda:\n"<<std::endl;
-    // std::cout<<"Primaries = "<<Fractions[0]<<std::endl;
-    // std::cout<<"From Sigma0 = "<<Fractions[1]<<std::endl;
-    // std::cout<<"From Xim = "<<Fractions[2]<<std::endl;
-    // std::cout<<"Flat feed = "<<Fractions[3]<<std::endl;
-    // std::cout<<"MisID = "<<Fractions[4]<<std::endl;
-    // std::cout<<"----------------------------\n"<<std::endl;
+    printf("-----------------------LAMBDAS--------------------------------\n");
+    printf("Modify_SigL = %.1f ---- Modify_XiL = %.1f\n",Modify_SigL,Modify_XiL);
+    printf("Fractions of primaries = %.3f\n", Fractions[0]);
+    printf("Fractions of Sec.from Σ0 = %.3f\n", Fractions[1]);
+    printf("Fractions of Sec.from Ξm0 = %.3f\n", Fractions[2]);
+    std::cout<<"Fractions for Lambda:\n"<<std::endl;
+    std::cout<<"Primaries = "<<Fractions[0]<<std::endl;
+    std::cout<<"From Sigma0 = "<<Fractions[1]<<std::endl;
+    std::cout<<"From Xim = "<<Fractions[2]<<std::endl;
+    std::cout<<"Flat feed = "<<Fractions[3]<<std::endl;
+    std::cout<<"MisID = "<<Fractions[4]<<std::endl;
+    std::cout<<"----------------------------\n"<<std::endl;
 
 }
 void DLM_CommonAnaFunctions::GetFractions_Xim(const TString& DataSample, const int& Variation, double* Fractions){
@@ -1660,14 +1659,14 @@ void DLM_CommonAnaFunctions::SetUpLambdaPars_pAp(const TString& DataSample, cons
   lambda_pars[1] = Purities_Ap[0]*Fraction_Ap[0]*Purities_p[1]*Fraction_p[1]+Purities_Ap[1]*Fraction_Ap[1]*Purities_p[0]*Fraction_p[0];
   lambda_pars[3] = Purities_Ap[0]*Fraction_Ap[0]*Purities_p[3]*Fraction_Ap[3]+Purities_Ap[3]*Fraction_Ap[3]*Purities_p[0]*Fraction_Ap[0];
   lambda_pars[2] = 1.-lambda_pars[3]-lambda_pars[1]-lambda_pars[0];
-  // std::cout<<"Lambda parameters for ppbar:\n"<<std::endl;
-  // std::cout<<"Primaries = "<<lambda_pars[0]<<std::endl;
-  // std::cout<<"From Lambda = "<<lambda_pars[1]<<std::endl;
-  // std::cout<<"Flat feed = "<<lambda_pars[2]<<std::endl;
-  // std::cout<<"MisID = "<<lambda_pars[3]<<std::endl;
-  // std::cout<<"-----------------------------\n"<<std::endl;
-  // std::cout<<"-----------------------------\n"<<std::endl;
-  // std::cout<<"TOT.ppbar= "<<lambda_pars[0]+lambda_pars[1]+lambda_pars[2]+lambda_pars[3]<<std::endl;
+  std::cout<<"Lambda parameters for ppbar:\n"<<std::endl;
+  std::cout<<"Primaries = "<<lambda_pars[0]<<std::endl;
+  std::cout<<"From Lambda = "<<lambda_pars[1]<<std::endl;
+  std::cout<<"Flat feed = "<<lambda_pars[2]<<std::endl;
+  std::cout<<"MisID = "<<lambda_pars[3]<<std::endl;
+  std::cout<<"-----------------------------\n"<<std::endl;
+  std::cout<<"-----------------------------\n"<<std::endl;
+  std::cout<<"TOT.ppbar= "<<lambda_pars[0]+lambda_pars[1]+lambda_pars[2]+lambda_pars[3]<<std::endl;
 
 }
 
@@ -1714,15 +1713,15 @@ void DLM_CommonAnaFunctions::SetUpLambdaPars_pAL(const TString& DataSample, cons
   lambda_pars[2] =    Purities_p[0]*Fraction_p[0]*Purities_AL[2]*Fraction_AL[2];
   lambda_pars[4] =    Purities_p[0]*Fraction_p[0]*Purities_AL[4]*Fraction_AL[4]+ Purities_p[3]*Fraction_p[3]*Purities_AL[0]*Fraction_AL[0];
   lambda_pars[3] =    1.-lambda_pars[0]-lambda_pars[1]-lambda_pars[2]-lambda_pars[4];
-  // std::cout<<"Lambda parameters for pLbar:\n"<<std::endl;
-  // std::cout<<"Primaries = "<<lambda_pars[0]<<std::endl;
-  // std::cout<<"From Sigma0 = "<<lambda_pars[1]<<std::endl;
-  // std::cout<<"From Xim = "<<lambda_pars[2]<<std::endl;
-  // std::cout<<"Flat feed = "<<lambda_pars[3]<<std::endl;
-  // std::cout<<"MisID = "<<lambda_pars[4]<<std::endl;
-  // std::cout<<"-----------------------------\n"<<std::endl;
-  // std::cout<<"-----------------------------\n"<<std::endl;
-  // std::cout<<"TOT.pLbar= "<<lambda_pars[0]+lambda_pars[1]+lambda_pars[2]+lambda_pars[3]+lambda_pars[4]<<std::endl;
+  std::cout<<"Lambda parameters for pLbar:\n"<<std::endl;
+  std::cout<<"Primaries = "<<lambda_pars[0]<<std::endl;
+  std::cout<<"From Sigma0 = "<<lambda_pars[1]<<std::endl;
+  std::cout<<"From Xim = "<<lambda_pars[2]<<std::endl;
+  std::cout<<"Flat feed = "<<lambda_pars[3]<<std::endl;
+  std::cout<<"MisID = "<<lambda_pars[4]<<std::endl;
+  std::cout<<"-----------------------------\n"<<std::endl;
+  std::cout<<"-----------------------------\n"<<std::endl;
+  std::cout<<"TOT.pLbar= "<<lambda_pars[0]+lambda_pars[1]+lambda_pars[2]+lambda_pars[3]+lambda_pars[4]<<std::endl;
 
 }
 
@@ -2089,18 +2088,18 @@ TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFun(const TString& DataSample,
         }else if(DataSample=="pp13TeV_HM_BBar"){
                 if(System=="ppbar"){
 //                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAp_App_full.root";
-                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/Raw_CF/CFOutput_pAp_%i.root",
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/Raw_CF/Norm018_028/CFOutput_pAp_%i.root",
                     		iSph);
                     HistoName = "hCk_ReweightedMeV_0";
                 }
                 else if(System=="pLambdabar"){
 //                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_pAL_ApL_full.root";
-                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/Raw_CF/CFOutput_pAL_%i.root",iSph);
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/Raw_CF/Norm018_028/CFOutput_pAL_%i.root",iSph);
                     HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
                 }
                 else if(System=="LambdaLambdabar"){
 //                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/data/HM/22July2019/CFOutput_LAL_ALL_full.root";
-                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/Raw_CF/CFOutput_LAL_%i.root",iSph);
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/Raw_CF/Norm018_028/CFOutput_LAL_%i.root",iSph);
                     HistoName = TString::Format("hCk_ReweightedMeV_%i",iReb);
                     // std::cout<<"Reading LLbar root file, works fine?\n"<<"HistoName = "<<HistoName<<std::endl;
                 }
@@ -2130,6 +2129,10 @@ TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFunVar(const TString& DataSample,co
 
 if(DataSample=="pp13TeV_HM_BBar"){
                 if(System=="ppbar"){
+                  if(iVar==0){
+                    FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/Systematics/HMNanoAOD/SyspAp/Systematics_pAp_reb1_def.root";
+                    HistoName = TString::Format("histVar_%i",iVar);
+                  }
                     FileName = "/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/Systematics/HMNanoAOD/SyspAp/Systematics_pAp_reb1_def.root";
                     HistoName = TString::Format("histVar_%i",iVar);
                 }
@@ -2150,6 +2153,45 @@ if(DataSample=="pp13TeV_HM_BBar"){
     TFile* FileROOT = new TFile(FileName, "read");
     TDirectory* dirROOT = FileROOT->GetDirectory("Raw");
     TH1F* histo = (TH1F*)dirROOT->Get(HistoName);
+    if(!histo){printf("\033[1;31mERROR:\033[0m The histo '%s' does not exist\n",HistoName.Data());return NULL;}
+    TString Name = histo->GetName();
+    gROOT->cd();
+    TH1F *histoCopy = (TH1F*)histo->Clone("histoCopy");
+    delete FileROOT;
+    histoCopy->SetName(Name);
+    return histoCopy;
+}
+
+//iReb = 0 is 4 MeV, 1 is 8, 2 is 12, 3 is 16, 4 is 20
+TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFunTemplate(const TString& DataSample,
+		const TString& System,const int& iReb){
+    TString FileName;
+    TString HistoName;
+
+if(DataSample=="pp13TeV_HM_BBar"){
+                if(System=="ppbar"){
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/TemplateCorrected_CF/fOutput.root");
+                    HistoName = "hCorrected_pAp";
+                }
+                else if(System=="pLambdabar"){
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/TemplateCorrected_CF/fOutput.root");
+                    HistoName = "hCorrected_pAL";
+                }
+                else if(System=="LambdaLambdabar"){
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/TemplateCorrected_CF/fOutput.root");
+                    HistoName = "hCorrected_LAL";
+                }
+                else{
+                    printf("\033[1;31mERROR:\033[0m The system '%s' does not exist\n",System.Data());
+                }
+            }
+    else{
+        printf("\033[1;31mERROR:\033[0m The data sample '%s' does not exist\n",DataSample.Data());
+        FileName = "";
+    }
+
+    TFile* FileROOT = new TFile(FileName, "read");
+    TH1F* histo = (TH1F*)FileROOT->Get(HistoName);
     if(!histo){printf("\033[1;31mERROR:\033[0m The histo '%s' does not exist\n",HistoName.Data());return NULL;}
     TString Name = histo->GetName();
     gROOT->cd();

@@ -1708,20 +1708,25 @@ void DLM_CommonAnaFunctions::SetUpLambdaPars_pAL(const TString& DataSample, cons
   GetFractions_p(DataSample,Variation_p,Fraction_p);
   GetPurities_AL(DataSample,Variation_AL,Purities_AL);
   GetFractions_AL(DataSample,Variation_AL,Fraction_AL);
-  lambda_pars[0] =    Purities_p[0]*Fraction_p[0]*Purities_AL[0]*Fraction_AL[0];
-  lambda_pars[1] =    Purities_p[0]*Fraction_p[0]*Purities_AL[1]*Fraction_AL[1];
-  lambda_pars[2] =    Purities_p[0]*Fraction_p[0]*Purities_AL[2]*Fraction_AL[2];
-  lambda_pars[4] =    Purities_p[0]*Fraction_p[0]*Purities_AL[4]*Fraction_AL[4]+ Purities_p[3]*Fraction_p[3]*Purities_AL[0]*Fraction_AL[0];
-  lambda_pars[3] =    1.-lambda_pars[0]-lambda_pars[1]-lambda_pars[2]-lambda_pars[4];
+
+
+
+  lambda_pars[0] =    Purities_p[0]*Fraction_p[0]*Purities_AL[0]*Fraction_AL[0];//primaries
+  lambda_pars[1] =    Purities_p[0]*Fraction_p[0]*Purities_AL[1]*Fraction_AL[1];//L from Sigma0
+  lambda_pars[2] =    Purities_p[0]*Fraction_p[0]*Purities_AL[2]*Fraction_AL[2];//L from Xim
+  lambda_pars[3] =    Purities_p[1]*Fraction_p[1]*Purities_AL[0]*Fraction_AL[0];//p from Lambda
+  lambda_pars[5] =    Purities_p[0]*Fraction_p[0]*Purities_AL[4]*Fraction_AL[4]+ Purities_p[3]*Fraction_p[3]*Purities_AL[0]*Fraction_AL[0];
+  lambda_pars[4] =    1.-lambda_pars[0]-lambda_pars[1]-lambda_pars[2]-lambda_pars[3]-lambda_pars[5];
   std::cout<<"Lambda parameters for pLbar:\n"<<std::endl;
   std::cout<<"Primaries = "<<lambda_pars[0]<<std::endl;
   std::cout<<"From Sigma0 = "<<lambda_pars[1]<<std::endl;
   std::cout<<"From Xim = "<<lambda_pars[2]<<std::endl;
-  std::cout<<"Flat feed = "<<lambda_pars[3]<<std::endl;
+  std::cout<<"From Lambda = "<<lambda_pars[3]<<std::endl;
+  std::cout<<"Flat feed = "<<lambda_pars[5]<<std::endl;
   std::cout<<"MisID = "<<lambda_pars[4]<<std::endl;
   std::cout<<"-----------------------------\n"<<std::endl;
   std::cout<<"-----------------------------\n"<<std::endl;
-  std::cout<<"TOT.pLbar= "<<lambda_pars[0]+lambda_pars[1]+lambda_pars[2]+lambda_pars[3]+lambda_pars[4]<<std::endl;
+  std::cout<<"TOT.pLbar= "<<lambda_pars[0]+lambda_pars[1]+lambda_pars[2]+lambda_pars[3]+lambda_pars[4]+lambda_pars[5]<<std::endl;
 
 }
 

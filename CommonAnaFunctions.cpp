@@ -2206,6 +2206,82 @@ if(DataSample=="pp13TeV_HM_BBar"){
     return histoCopy;
 }
 
+TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFunTemplatemT(const TString& DataSample,
+		const TString& System,const int& imT){
+    TString FileName;
+    TString HistoName;
+
+if(DataSample=="pp13TeV_HM_BBar"){
+                if(System=="ppbar"){
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/TemplateCorrected_CF/mT_Corrected/fOutputpAp_%i.root",imT);
+                    HistoName = "hCorrected_pAp";
+                }
+                else if(System=="pLambdabar"){
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/TemplateCorrected_CF/mT_Corrected/fOutputpAL_%i.root",imT);
+                    HistoName = "hCorrected_pAL";
+                }
+                else if(System=="LambdaLambdabar"){
+                    FileName = TString::Format("/Users/sartozza/cernbox/Analysis/BBbar/GentleFemto_Output/NanoOutput/CF/TemplateCorrected_CF/mT_Corrected/fOutputLAL_%i.root",imT);
+                    HistoName = "hCorrected_LAL";
+                }
+                else{
+                    printf("\033[1;31mERROR:\033[0m The system '%s' does not exist\n",System.Data());
+                }
+            }
+    else{
+        printf("\033[1;31mERROR:\033[0m The data sample '%s' does not exist\n",DataSample.Data());
+        FileName = "";
+    }
+
+    TFile* FileROOT = new TFile(FileName, "read");
+    TH1F* histo = (TH1F*)FileROOT->Get(HistoName);
+    if(!histo){printf("\033[1;31mERROR:\033[0m The histo '%s' does not exist\n",HistoName.Data());return NULL;}
+    TString Name = histo->GetName();
+    gROOT->cd();
+    TH1F *histoCopy = (TH1F*)histo->Clone("histoCopy");
+    delete FileROOT;
+    histoCopy->SetName(Name);
+    return histoCopy;
+}
+
+TH1F* DLM_CommonAnaFunctions::GetAliceExpCorrFunTemplatemTLocal(const TString& DataSample,
+		const TString& System,const int& imT, TString InputFolder){
+    TString FileName;
+    TString HistoName;
+
+if(DataSample=="pp13TeV_HM_BBar"){
+                if(System=="ppbar"){
+                    FileName = TString::Format(InputFolder + "/fOutputpAp_%i.root",imT);
+                    HistoName = "hCorrected_pAp";
+                }
+                else if(System=="pLambdabar"){
+                    FileName = TString::Format(InputFolder +"fOutputpAL_%i.root",imT);
+                    HistoName = "hCorrected_pAL";
+                }
+                else if(System=="LambdaLambdabar"){
+                    FileName = TString::Format(InputFolder +"fOutputLAL_%i.root",imT);
+                    HistoName = "hCorrected_LAL";
+                }
+                else{
+                    printf("\033[1;31mERROR:\033[0m The system '%s' does not exist\n",System.Data());
+                }
+            }
+    else{
+        printf("\033[1;31mERROR:\033[0m The data sample '%s' does not exist\n",DataSample.Data());
+        FileName = "";
+    }
+
+    TFile* FileROOT = new TFile(FileName, "read");
+    TH1F* histo = (TH1F*)FileROOT->Get(HistoName);
+    if(!histo){printf("\033[1;31mERROR:\033[0m The histo '%s' does not exist\n",HistoName.Data());return NULL;}
+    TString Name = histo->GetName();
+    gROOT->cd();
+    TH1F *histoCopy = (TH1F*)histo->Clone("histoCopy");
+    delete FileROOT;
+    histoCopy->SetName(Name);
+    return histoCopy;
+}
+
 void DLM_CommonAnaFunctions::Clean_CommonAnaFunctions(){
     //for(unsigned uLevy=0; uLevy<NumCleverLevyObjects; uLevy++){
     //    delete CleverLevy[uLevy];

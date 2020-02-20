@@ -113,6 +113,7 @@ public:
     TH2F* GetResidualMatrix(const TString&& FinalSystem, const TString& InitialSystem);
     TH1F* GetAliceExpCorrFun(const TString& DataSample,const TString& System,const int& iReb,const int& iSph);
     TH1F* GetAliceExpCorrFunVar(const TString& DataSample,const TString& System,const int& iVar);
+    TH1F* GetAliceExpCorrFunmT(const TString& DataSample,const TString& System,const int& iReb);
     TH1F* GetAliceExpCorrFunTemplate(const TString& DataSample,const TString& System,const int& iReb);
     TH1F* GetAliceExpCorrFunTemplatemT(const TString& DataSample,const TString& System,const int& iReb);
     TH1F* GetAliceExpCorrFunTemplatemTLocal(const TString& DataSample,const TString& System,const int& iReb, TString InputFolder);

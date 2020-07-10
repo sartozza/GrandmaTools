@@ -14,6 +14,7 @@ const double Mass_pic = 139.57018;
 const double Mass_p = 938.272;
 const double Mass_L = 1115.683;
 const double Mass_Xim = 1321.7;
+const double Mass_Omega = 1672.45;
 
 
 class DLM_CommonAnaFunctions{
@@ -44,6 +45,7 @@ public:
     void SetUpCats_pAp(CATS& Kitty, const TString& POT, const TString& SOURCE);
     void SetUpCats_pApHaide(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& DataSample);
     void SetUpCats_pApCoulomb(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& DataSample);
+    void SetUpCats_OmegaOmegaCoulomb(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& DataSample);
 
     //POT:
     //  "LO"

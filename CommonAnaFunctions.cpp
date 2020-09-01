@@ -832,7 +832,7 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
       ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,3);
       NumChannels=9;
     } else if(POT=="HAIDE_5"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in all PWs
-      ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,5);
+      ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,4);
       NumChannels=12;
     }
     else{

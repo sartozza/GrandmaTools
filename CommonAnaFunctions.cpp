@@ -13,19 +13,21 @@
 #include "TGraph.h"
 
 
-DLM_CommonAnaFunctions::DLM_CommonAnaFunctions():NumCleverLevyObjects(4){
+DLM_CommonAnaFunctions::DLM_CommonAnaFunctions():NumCleverLevyObjects(5){
     //Simple_Reso = NULL;
     //Simple_Reso = new MS_GaussExp_mT_Simple [NumCleverLevyObjects];
     CleverLevy = NULL;
     CleverLevy = new DLM_CleverLevy [NumCleverLevyObjects];
     CleverMcLevyReso = NULL;
     CleverMcLevyReso = new DLM_CleverMcLevyReso [NumCleverLevyObjects];
+    CatsFilesFolder = new TString();
 }
 
 DLM_CommonAnaFunctions::~DLM_CommonAnaFunctions(){
     //if(Simple_Reso){delete[]Simple_Reso;Simple_Reso=NULL;}
     if(CleverLevy){delete[]CleverLevy;CleverLevy=NULL;}
     if(CleverMcLevyReso){delete[]CleverMcLevyReso;CleverMcLevyReso=NULL;}
+    delete CatsFilesFolder;
 }
 
 //Implement Lednicky
@@ -474,6 +476,8 @@ void DLM_CommonAnaFunctions::SetUpCats_pL(CATS& Kitty, const TString& POT, const
     if(POT=="LO"){
 //        ExternalWF = Init_pL_Haidenbauer(   "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/Haidenbauer/pLambdaLO_600/",
 //                                Kitty, 0, 600);
+//        ExternalWF = Init_pL_Haidenbauer(CatsFilesFolder[0]+"/Interaction/Haidenbauer/pLambdaLO_600/",
+
         ExternalWF = Init_pL_Haidenbauer(   "/Users/sartozza/FemtoStuff/Haidenbauer/pLambdaLO_600/",
                                                         Kitty, 0, 600);
         NumChannels=2;
@@ -777,6 +781,7 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
     CATSparameters* cPotPars1S0 = NULL;
     CATSparameters* cPotPars3S1 = NULL;
 
+
     DLM_Histo<complex<double>>*** ExternalWF=NULL;
     unsigned NumChannels=0;
 
@@ -813,14 +818,20 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
     if(POT=="HAIDE_1"){//only ppbar->ppbar
 //        ExternalWF = Init_pL_Haidenbauer(   "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/Haidenbauer/pLambdaLO_600/",
 //                                Kitty, 0, 600);
-        ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,0);//type = 1 takes both ppbar->ppbar + ppbar->nnbar
+        ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,0);
 
-        NumChannels=3;
+        NumChannels=4;
     }
     else if(POT=="HAIDE_2"){//ppbar->ppbar + nnbar->ppbar
-      ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,1);//type = 1 takes both ppbar->ppbar + ppbar->nnbar
+      ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,1);
 
-        NumChannels=6;
+      NumChannels=8;
+    } else if(POT=="HAIDE_3"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in 1S0
+      ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,2);
+      NumChannels=9;
+    } else if(POT=="HAIDE_4"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in 3S1
+      ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,3);
+      NumChannels=9;
     }
     else{
         printf("\033[1;31mERROR:\033[0m Non-existing pp potential '%s'\n",POT.Data());
@@ -839,24 +850,114 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
     for(unsigned uCh=0; uCh<NumChannels; uCh++){
       if(ExternalWF){
       //Setting the wfs for the different channels
-      if(POT=="HAIDE_1"){//only ppbar->ppbar
+      if(POT=="HAIDE_1"){//only ppbar->ppbar           ch pw               ch pw
         Kitty.SetExternalWaveFunction(0,0,ExternalWF[0][0][0],ExternalWF[1][0][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(0,1,ExternalWF[0][0][1],ExternalWF[1][0][1]);//ExternalWF_pantip[1] is phase shifts
+
         Kitty.SetExternalWaveFunction(1,0,ExternalWF[0][1][0],ExternalWF[1][1][0]);//ExternalWF_pantip[1] is phase shifts
         Kitty.SetExternalWaveFunction(1,1,ExternalWF[0][1][1],ExternalWF[1][1][1]);//ExternalWF_pantip[1] is phase shifts
+
         Kitty.SetExternalWaveFunction(2,0,ExternalWF[0][2][0],ExternalWF[1][2][0]);//ExternalWF_pantip[1] is phase shifts
-      } else if(POT=="HAIDE_2"){//ppbar->ppbar + nnbar->ppbar
-        Kitty.SetExternalWaveFunction(0,0,ExternalWF[0][0][0],ExternalWF[1][0][0]);//ExternalWF_pantip[1] is phase shifts
-        Kitty.SetExternalWaveFunction(1,0,ExternalWF[0][1][0],ExternalWF[1][1][0]);//ExternalWF_pantip[1] is phase shifts
-        Kitty.SetExternalWaveFunction(1,1,ExternalWF[0][1][1],ExternalWF[1][1][1]);//ExternalWF_pantip[1] is phase shifts
-        Kitty.SetExternalWaveFunction(2,0,ExternalWF[0][2][0],ExternalWF[1][2][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(2,1,ExternalWF[0][2][1],ExternalWF[1][2][1]);//ExternalWF_pantip[1] is phase shifts
 
         Kitty.SetExternalWaveFunction(3,0,ExternalWF[0][3][0],ExternalWF[1][3][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(3,1,ExternalWF[0][3][1],ExternalWF[1][3][1]);//ExternalWF_pantip[1] is phase shifts
+      } else if(POT=="HAIDE_2"){//ppbar->ppbar + nnbar->ppbar
+        Kitty.SetExternalWaveFunction(0,0,ExternalWF[0][0][0],ExternalWF[1][0][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(0,1,ExternalWF[0][0][1],ExternalWF[1][0][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(1,0,ExternalWF[0][1][0],ExternalWF[1][1][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(1,1,ExternalWF[0][1][1],ExternalWF[1][1][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(2,0,ExternalWF[0][2][0],ExternalWF[1][2][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(2,1,ExternalWF[0][2][1],ExternalWF[1][2][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(3,0,ExternalWF[0][3][0],ExternalWF[1][3][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(3,1,ExternalWF[0][3][1],ExternalWF[1][3][1]);//ExternalWF_pantip[1] is phase shifts
+
+// nAn part
         Kitty.SetExternalWaveFunction(4,0,ExternalWF[0][4][0],ExternalWF[1][4][0]);//ExternalWF_pantip[1] is phase shifts
         Kitty.SetExternalWaveFunction(4,1,ExternalWF[0][4][1],ExternalWF[1][4][1]);//ExternalWF_pantip[1] is phase shifts
+
         Kitty.SetExternalWaveFunction(5,0,ExternalWF[0][5][0],ExternalWF[1][5][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(5,1,ExternalWF[0][5][1],ExternalWF[1][5][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(6,0,ExternalWF[0][6][0],ExternalWF[1][6][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(6,1,ExternalWF[0][6][1],ExternalWF[1][6][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(7,0,ExternalWF[0][7][0],ExternalWF[1][7][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(7,1,ExternalWF[0][7][1],ExternalWF[1][7][1]);//ExternalWF_pantip[1] is phase shifts
       }
+else if(POT=="HAIDE_3" || POT=="HAIDE_4"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar
+        Kitty.SetExternalWaveFunction(0,0,ExternalWF[0][0][0],ExternalWF[1][0][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(0,1,ExternalWF[0][0][1],ExternalWF[1][0][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(1,0,ExternalWF[0][1][0],ExternalWF[1][1][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(1,1,ExternalWF[0][1][1],ExternalWF[1][1][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(2,0,ExternalWF[0][2][0],ExternalWF[1][2][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(2,1,ExternalWF[0][2][1],ExternalWF[1][2][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(3,0,ExternalWF[0][3][0],ExternalWF[1][3][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(3,1,ExternalWF[0][3][1],ExternalWF[1][3][1]);//ExternalWF_pantip[1] is phase shifts
+
+// nAn part
+        Kitty.SetExternalWaveFunction(4,0,ExternalWF[0][4][0],ExternalWF[1][4][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(4,1,ExternalWF[0][4][1],ExternalWF[1][4][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(5,0,ExternalWF[0][5][0],ExternalWF[1][5][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(5,1,ExternalWF[0][5][1],ExternalWF[1][5][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(6,0,ExternalWF[0][6][0],ExternalWF[1][6][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(6,1,ExternalWF[0][6][1],ExternalWF[1][6][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(7,0,ExternalWF[0][7][0],ExternalWF[1][7][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(7,1,ExternalWF[0][7][1],ExternalWF[1][7][1]);//ExternalWF_pantip[1] is phase shifts
+// "2pi" part
+        Kitty.SetExternalWaveFunction(8,0,ExternalWF[0][8][0],ExternalWF[1][8][0]);//ExternalWF_pantip[1] is phase shifts
       }
-        else{
+else if(POT=="HAIDE_5"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in all PW
+        Kitty.SetExternalWaveFunction(0,0,ExternalWF[0][0][0],ExternalWF[1][0][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(0,1,ExternalWF[0][0][1],ExternalWF[1][0][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(1,0,ExternalWF[0][1][0],ExternalWF[1][1][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(1,1,ExternalWF[0][1][1],ExternalWF[1][1][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(2,0,ExternalWF[0][2][0],ExternalWF[1][2][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(2,1,ExternalWF[0][2][1],ExternalWF[1][2][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(3,0,ExternalWF[0][3][0],ExternalWF[1][3][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(3,1,ExternalWF[0][3][1],ExternalWF[1][3][1]);//ExternalWF_pantip[1] is phase shifts
+
+// nAn part
+        Kitty.SetExternalWaveFunction(4,0,ExternalWF[0][4][0],ExternalWF[1][4][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(4,1,ExternalWF[0][4][1],ExternalWF[1][4][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(5,0,ExternalWF[0][5][0],ExternalWF[1][5][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(5,1,ExternalWF[0][5][1],ExternalWF[1][5][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(6,0,ExternalWF[0][6][0],ExternalWF[1][6][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(6,1,ExternalWF[0][6][1],ExternalWF[1][6][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(7,0,ExternalWF[0][7][0],ExternalWF[1][7][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(7,1,ExternalWF[0][7][1],ExternalWF[1][7][1]);//ExternalWF_pantip[1] is phase shifts
+// "2pi" part
+        Kitty.SetExternalWaveFunction(8,0,ExternalWF[0][8][0],ExternalWF[1][8][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(8,1,ExternalWF[0][8][1],ExternalWF[1][8][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(9,0,ExternalWF[0][9][0],ExternalWF[1][9][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(9,1,ExternalWF[0][9][1],ExternalWF[1][9][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(10,0,ExternalWF[0][10][0],ExternalWF[1][10][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(10,1,ExternalWF[0][10][1],ExternalWF[1][10][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(11,0,ExternalWF[0][11][0],ExternalWF[1][11][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(11,1,ExternalWF[0][11][1],ExternalWF[1][11][1]);//ExternalWF_pantip[1] is phase shifts
+      }
+
+
+    }
+      else{
             printf("\033[1;31mERROR:\033[0m SetUpCats_pApHaide says that you should NEVER see this message! BIG BUG!\n");
             goto CLEAN_SetUpCats_pApHaide;
         }
@@ -2405,6 +2506,10 @@ if(DataSample=="pp13TeV_HM_BBar"){
     delete FileROOT;
     histoCopy->SetName(Name);
     return histoCopy;
+}
+
+void DLM_CommonAnaFunctions::SetCatsFilesFolder(const TString& folder){
+    CatsFilesFolder[0] = folder;
 }
 
 void DLM_CommonAnaFunctions::Clean_CommonAnaFunctions(){

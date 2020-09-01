@@ -110,6 +110,7 @@ public:
     void SetUpLambdaParsContrib_pp(const TString& DataSample, const int& Variation_p, double* lambda_pars);
     void SetUpLambdaParsContrib_pL(const TString& DataSample, const int& Variation_p, const int& Variation_L, double* lambda_pars);
 
+    void SetCatsFilesFolder(const TString& folder);
 
     TH2F* GetResolutionMatrix(const TString& DataSample,const TString&& System);
     TH2F* GetResidualMatrix(const TString&& FinalSystem, const TString& InitialSystem);
@@ -126,6 +127,7 @@ private:
     DLM_CleverLevy* CleverLevy;
     DLM_CleverMcLevyReso* CleverMcLevyReso;
     const unsigned NumCleverLevyObjects;
+    TString* CatsFilesFolder;
 };
 
 /*

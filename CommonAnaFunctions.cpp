@@ -824,7 +824,6 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
     }
     else if(POT=="HAIDE_2"){//ppbar->ppbar + nnbar->ppbar
       ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,1);
-
       NumChannels=8;
     } else if(POT=="HAIDE_3"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in 1S0
       ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,2);
@@ -832,6 +831,9 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
     } else if(POT=="HAIDE_4"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in 3S1
       ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,3);
       NumChannels=9;
+    } else if(POT=="HAIDE_5"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in all PWs
+      ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,5);
+      NumChannels=12;
     }
     else{
         printf("\033[1;31mERROR:\033[0m Non-existing pp potential '%s'\n",POT.Data());

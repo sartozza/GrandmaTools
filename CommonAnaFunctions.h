@@ -15,6 +15,7 @@ const double Mass_p = 938.272;
 const double Mass_L = 1115.683;
 const double Mass_Xim = 1321.7;
 const double Mass_Omega = 1672.45;
+const double Mass_K = 493.677;
 
 
 class DLM_CommonAnaFunctions{
@@ -46,6 +47,14 @@ public:
     void SetUpCats_pApHaide(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& DataSample);
     void SetUpCats_pApCoulomb(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& DataSample);
     void SetUpCats_OmegaOmegaCoulomb(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& DataSample);
+
+    //Setting up for FemtoReview
+    void SetUpCats_pXim_Review(CATS& Kitty, const TString& POT, const TString& SOURCE, const bool Coulomb=true);
+    void SetUpCats_pOmega_Review(CATS& Kitty, const TString& POT, const TString& SOURCE, const bool Coulomb=true);
+    void SetUpCats_pKp_Review(CATS& Kitty, const TString& POT, const TString& SOURCE,const bool Coulomb=true);
+    void SetUpCats_pKm_Review(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& Coupled);
+    void SetUpCats_pL_Review(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& Coupled);
+
 
     //POT:
     //  "LO"
@@ -83,14 +92,14 @@ public:
     void GetPurities_p(const TString& DataSample, const int& Variation, double* Purities);
     void GetPurities_L(const TString& DataSample, const int& Variation, double* Purities);
     void GetPurities_Xim(const TString& DataSample, const int& Variation, double* Purities);
-    void GetFractions_p(const TString& DataSample, const int& Variation, double* Fractions);
-    void GetFractions_L(const TString& DataSample, const int& Variation, double* Fractions);
+    void GetFractions_p(const TString& DataSample, const int& Variation, double* Fractions, bool PrintOutput=false);
+    void GetFractions_L(const TString& DataSample, const int& Variation, double* Fractions, bool PrintOutput=false);
     void GetFractions_Xim(const TString& DataSample, const int& Variation, double* Fractions);
 
     void GetPurities_Ap(const TString& DataSample, const int& Variation, double* Purities);
     void GetPurities_AL(const TString& DataSample, const int& Variation, double* Purities);
-    void GetFractions_Ap(const TString& DataSample, const int& Variation, double* Fractions);
-    void GetFractions_AL(const TString& DataSample, const int& Variation, double* Fractions);
+    void GetFractions_Ap(const TString& DataSample, const int& Variation, double* Fractions, bool PrintOutput=false);
+    void GetFractions_AL(const TString& DataSample, const int& Variation, double* Fractions, bool PrintOutput=false);
 
 
     //primary, pL->pp, XX->pp, pp fake
@@ -99,9 +108,9 @@ public:
     void SetUpLambdaPars_pL(const TString& DataSample, const int& Variation_p, const int& Variation_L, double* lambda_pars);
     void SetUpLambdaPars_pXim(const TString& DataSample, const int& Variation_p, const int& Variation_Xim, double* lambda_pars);
 
-    void SetUpLambdaPars_pAp(const TString& DataSample, const int& Variation_p, const int& Variation_Ap, double* lambda_pars);
-    void SetUpLambdaPars_pAL(const TString& DataSample, const int& Variation_p, const int& Variation_AL, double* lambda_pars);
-    void SetUpLambdaPars_LAL(const TString& DataSample, const int& Variation_L, const int& Variation_AL, double* lambda_pars);
+    void SetUpLambdaPars_pAp(const TString& DataSample, const int& Variation_p, const int& Variation_Ap, double* lambda_pars, bool PrintOutput=false);
+    void SetUpLambdaPars_pAL(const TString& DataSample, const int& Variation_p, const int& Variation_AL, double* lambda_pars, bool PrintOutput=false);
+    void SetUpLambdaPars_LAL(const TString& DataSample, const int& Variation_L, const int& Variation_AL, double* lambda_pars, bool PrintOutput=false);
 
     void SetUpLambdaParsContrib_pAp(const TString& DataSample, const int& Variation_p, double* lambda_pars);
     void SetUpLambdaParsContrib_pAL(const TString& DataSample, const int& Variation_p, const int& Variation_AL, double* lambda_pars);

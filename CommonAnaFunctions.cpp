@@ -30,6 +30,7 @@ DLM_CommonAnaFunctions::~DLM_CommonAnaFunctions(){
     delete CatsFilesFolder;
 }
 
+
 //Implement Lednicky
 void DLM_CommonAnaFunctions::SetUpCats_pAp(CATS& Kitty, const TString& POT, const TString& SOURCE){
   std::cout<<"SetUpCats_pAp dummy \n"<<std::endl;
@@ -814,12 +815,20 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
         printf("\033[1;31mERROR:\033[0m Non-existing source '%s'\n",SOURCE.Data());
         goto CLEAN_SetUpCats_pApHaide;
     }
+//Different selections of potentials setup:
+//HAIDE_1 -> only p-antip->p-antip (TYPE 0)
+//HAIDE_2 -> p-antip->p-antip + n-antin->p-antip (TYPE 1)
+//HAIDE_3 -> p-antip->p-antip + n-antin->p-antip + 2M -> p-antip in 1S0 (TYPE 2)
+//HAIDE_4 -> p-antip->p-antip + n-antin->p-antip + 2M -> p-antip in 3S1 (TYPE 3)
+//HAIDE_5 -> p-antip->p-antip + n-antin->p-antip + 2M -> p-antip in 1S0 + 3S1 (TYPE 4)
+//HAIDE_6 -> p-antip->p-antip + n-antin->p-antip + 2M -> p-antip in 1S0 + 3S1 + 3P0 (TYPE 5)
+//HAIDE_7 -> p-antip->p-antip + n-antin->p-antip + 2M -> p-antip in 1S0 + 3S1 + 1P1 (TYPE 6)
+//Update 05.10.2020, implementing real wfs of Haidenbauer
+//HAIDE_8 -> p-antip->p-antip + n-antin->p-antip + Real 2M -> p-antip in 1S0 (TYPE 7)
+
 
     if(POT=="HAIDE_1"){//only ppbar->ppbar
-//        ExternalWF = Init_pL_Haidenbauer(   "/home/dmihaylov/Dudek_Ubuntu/Work/Kclus/GeneralFemtoStuff/CorrelationFiles_2018/Haidenbauer/pLambdaLO_600/",
-//                                Kitty, 0, 600);
         ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,0);
-
         NumChannels=4;
     }
     else if(POT=="HAIDE_2"){//ppbar->ppbar + nnbar->ppbar
@@ -831,9 +840,18 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
     } else if(POT=="HAIDE_4"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in 3S1
       ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,3);
       NumChannels=9;
-    } else if(POT=="HAIDE_5"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in all PWs
+    } else if(POT=="HAIDE_5"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in 1S0 + 3S1
       ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,4);
+      NumChannels=10;
+    } else if(POT=="HAIDE_6"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in 1S0,3S1 and 3P0
+      ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,5);
+      NumChannels=11;
+    } else if(POT=="HAIDE_7"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in 1S0,1P1 3S1 and 3P0
+      ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,6);
       NumChannels=12;
+    } else if(POT=="HAIDE_8"){//ppbar->ppbar + nnbar->ppbar + 2M->ppbar in 1S0
+      ExternalWF=Init_pantip_Haidenbauer("/Users/sartozza/cernbox/Analysis/BBbar/Wavefunctions/Haidenbauer/p_antip_wCoulomb/wf_18092019/",Kitty,7);
+      NumChannels=9;
     }
     else{
         printf("\033[1;31mERROR:\033[0m Non-existing pp potential '%s'\n",POT.Data());
@@ -890,7 +908,7 @@ void DLM_CommonAnaFunctions::SetUpCats_pApHaide(CATS& Kitty, const TString& POT,
         Kitty.SetExternalWaveFunction(7,0,ExternalWF[0][7][0],ExternalWF[1][7][0]);//ExternalWF_pantip[1] is phase shifts
         Kitty.SetExternalWaveFunction(7,1,ExternalWF[0][7][1],ExternalWF[1][7][1]);//ExternalWF_pantip[1] is phase shifts
       }
-else if(POT=="HAIDE_3" || POT=="HAIDE_4"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar
+else if(POT=="HAIDE_3" || POT=="HAIDE_4" || POT=="HAIDE_8"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar
         Kitty.SetExternalWaveFunction(0,0,ExternalWF[0][0][0],ExternalWF[1][0][0]);//ExternalWF_pantip[1] is phase shifts
         Kitty.SetExternalWaveFunction(0,1,ExternalWF[0][0][1],ExternalWF[1][0][1]);//ExternalWF_pantip[1] is phase shifts
 
@@ -918,7 +936,7 @@ else if(POT=="HAIDE_3" || POT=="HAIDE_4"){//ppbar->ppbar + nnbar->ppbar + "2pi"-
 // "2pi" part
         Kitty.SetExternalWaveFunction(8,0,ExternalWF[0][8][0],ExternalWF[1][8][0]);//ExternalWF_pantip[1] is phase shifts
       }
-else if(POT=="HAIDE_5"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in all PW
+else if(POT=="HAIDE_5"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in 1S0 + 3S1
         Kitty.SetExternalWaveFunction(0,0,ExternalWF[0][0][0],ExternalWF[1][0][0]);//ExternalWF_pantip[1] is phase shifts
         Kitty.SetExternalWaveFunction(0,1,ExternalWF[0][0][1],ExternalWF[1][0][1]);//ExternalWF_pantip[1] is phase shifts
 
@@ -943,18 +961,76 @@ else if(POT=="HAIDE_5"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in all PW
 
         Kitty.SetExternalWaveFunction(7,0,ExternalWF[0][7][0],ExternalWF[1][7][0]);//ExternalWF_pantip[1] is phase shifts
         Kitty.SetExternalWaveFunction(7,1,ExternalWF[0][7][1],ExternalWF[1][7][1]);//ExternalWF_pantip[1] is phase shifts
-// "2pi" part
+// "2pi" part in 1S0 and 3S1
         Kitty.SetExternalWaveFunction(8,0,ExternalWF[0][8][0],ExternalWF[1][8][0]);//ExternalWF_pantip[1] is phase shifts
-        Kitty.SetExternalWaveFunction(8,1,ExternalWF[0][8][1],ExternalWF[1][8][1]);//ExternalWF_pantip[1] is phase shifts
 
         Kitty.SetExternalWaveFunction(9,0,ExternalWF[0][9][0],ExternalWF[1][9][0]);//ExternalWF_pantip[1] is phase shifts
-        Kitty.SetExternalWaveFunction(9,1,ExternalWF[0][9][1],ExternalWF[1][9][1]);//ExternalWF_pantip[1] is phase shifts
+      }
+else if(POT=="HAIDE_6"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in 1S0 + 3S1,3P0
+        Kitty.SetExternalWaveFunction(0,0,ExternalWF[0][0][0],ExternalWF[1][0][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(0,1,ExternalWF[0][0][1],ExternalWF[1][0][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(1,0,ExternalWF[0][1][0],ExternalWF[1][1][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(1,1,ExternalWF[0][1][1],ExternalWF[1][1][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(2,0,ExternalWF[0][2][0],ExternalWF[1][2][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(2,1,ExternalWF[0][2][1],ExternalWF[1][2][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(3,0,ExternalWF[0][3][0],ExternalWF[1][3][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(3,1,ExternalWF[0][3][1],ExternalWF[1][3][1]);//ExternalWF_pantip[1] is phase shifts
+
+// nAn part
+        Kitty.SetExternalWaveFunction(4,0,ExternalWF[0][4][0],ExternalWF[1][4][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(4,1,ExternalWF[0][4][1],ExternalWF[1][4][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(5,0,ExternalWF[0][5][0],ExternalWF[1][5][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(5,1,ExternalWF[0][5][1],ExternalWF[1][5][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(6,0,ExternalWF[0][6][0],ExternalWF[1][6][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(6,1,ExternalWF[0][6][1],ExternalWF[1][6][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(7,0,ExternalWF[0][7][0],ExternalWF[1][7][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(7,1,ExternalWF[0][7][1],ExternalWF[1][7][1]);//ExternalWF_pantip[1] is phase shifts
+// "2pi" part in 1S0 and 3S1,3P0
+        Kitty.SetExternalWaveFunction(8,0,ExternalWF[0][8][0],ExternalWF[1][8][0]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(9,0,ExternalWF[0][9][0],ExternalWF[1][9][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(10,0,ExternalWF[0][10][0],ExternalWF[1][10][0]);//ExternalWF_pantip[1] is phase shifts
+      }
+else if(POT=="HAIDE_7"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in 1S0,1P1 + 3S1,3P0
+        Kitty.SetExternalWaveFunction(0,0,ExternalWF[0][0][0],ExternalWF[1][0][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(0,1,ExternalWF[0][0][1],ExternalWF[1][0][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(1,0,ExternalWF[0][1][0],ExternalWF[1][1][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(1,1,ExternalWF[0][1][1],ExternalWF[1][1][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(2,0,ExternalWF[0][2][0],ExternalWF[1][2][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(2,1,ExternalWF[0][2][1],ExternalWF[1][2][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(3,0,ExternalWF[0][3][0],ExternalWF[1][3][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(3,1,ExternalWF[0][3][1],ExternalWF[1][3][1]);//ExternalWF_pantip[1] is phase shifts
+
+// nAn part
+        Kitty.SetExternalWaveFunction(4,0,ExternalWF[0][4][0],ExternalWF[1][4][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(4,1,ExternalWF[0][4][1],ExternalWF[1][4][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(5,0,ExternalWF[0][5][0],ExternalWF[1][5][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(5,1,ExternalWF[0][5][1],ExternalWF[1][5][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(6,0,ExternalWF[0][6][0],ExternalWF[1][6][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(6,1,ExternalWF[0][6][1],ExternalWF[1][6][1]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(7,0,ExternalWF[0][7][0],ExternalWF[1][7][0]);//ExternalWF_pantip[1] is phase shifts
+        Kitty.SetExternalWaveFunction(7,1,ExternalWF[0][7][1],ExternalWF[1][7][1]);//ExternalWF_pantip[1] is phase shifts
+// "2pi" part in 1S0 and 3S1,3P0
+        Kitty.SetExternalWaveFunction(8,0,ExternalWF[0][8][0],ExternalWF[1][8][0]);//ExternalWF_pantip[1] is phase shifts
+
+        Kitty.SetExternalWaveFunction(9,0,ExternalWF[0][9][0],ExternalWF[1][9][0]);//ExternalWF_pantip[1] is phase shifts
 
         Kitty.SetExternalWaveFunction(10,0,ExternalWF[0][10][0],ExternalWF[1][10][0]);//ExternalWF_pantip[1] is phase shifts
-        Kitty.SetExternalWaveFunction(10,1,ExternalWF[0][10][1],ExternalWF[1][10][1]);//ExternalWF_pantip[1] is phase shifts
 
         Kitty.SetExternalWaveFunction(11,0,ExternalWF[0][11][0],ExternalWF[1][11][0]);//ExternalWF_pantip[1] is phase shifts
-        Kitty.SetExternalWaveFunction(11,1,ExternalWF[0][11][1],ExternalWF[1][11][1]);//ExternalWF_pantip[1] is phase shifts
+
       }
 
 
@@ -976,6 +1052,474 @@ else if(POT=="HAIDE_5"){//ppbar->ppbar + nnbar->ppbar + "2pi"->ppbar in all PW
     if(cPotPars3S1){delete cPotPars3S1; cPotPars3S1=NULL;}
     CleanUpWfHisto(Kitty,ExternalWF);
 }
+
+//Setting up for FemtoReview
+void DLM_CommonAnaFunctions::SetUpCats_pXim_Review(CATS& Kitty, const TString& POT, const TString& SOURCE,const bool Coulomb){
+    CATSparameters* cPars = NULL;
+    CATSparameters* pPars = NULL;
+
+    CATSparameters* cPotParsI0S0 = NULL;
+    CATSparameters* cPotParsI0S1 = NULL;
+    CATSparameters* cPotParsI1S0 = NULL;
+    CATSparameters* cPotParsI1S1 = NULL;
+
+    unsigned NumChannels=0;
+
+    if(SOURCE=="Gauss"){
+        cPars = new CATSparameters(CATSparameters::tSource,1,true);
+        cPars->SetParameter(0,1.02);
+        Kitty.SetAnaSource(GaussSource, *cPars);
+        Kitty.SetUseAnalyticSource(true);
+    } else{
+          printf("\033[1;31mERROR:\033[0m Non-existing source '%s'\n",SOURCE.Data());
+          goto CLEAN_SetUpCats_pp;
+      }
+
+
+    if(POT=="pXim_HALQCD1"){
+      //#,#,POT_ID,POT_FLAG,t_tot,t1,t2,s,l,j
+      double PotParsI0S0[9]={pXim_HALQCD1,12,0,-1,1,0,0,0,0};//put t=24 to have NO jackknife
+      double PotParsI0S1[9]={pXim_HALQCD1,12,0,-1,1,1,0,1,0};
+      double PotParsI1S0[9]={pXim_HALQCD1,12,1,1,1,0,0,0,0};
+      double PotParsI1S1[9]={pXim_HALQCD1,12,1,1,1,1,0,1,0};
+      cPotParsI0S0 = new CATSparameters(CATSparameters::tPotential,9,true); cPotParsI0S0->SetParameters(PotParsI0S0);
+      cPotParsI0S1 = new CATSparameters(CATSparameters::tPotential,9,true); cPotParsI0S1->SetParameters(PotParsI0S1);
+      cPotParsI1S0 = new CATSparameters(CATSparameters::tPotential,9,true); cPotParsI1S0->SetParameters(PotParsI1S0);
+      cPotParsI1S1 = new CATSparameters(CATSparameters::tPotential,9,true); cPotParsI1S1->SetParameters(PotParsI1S1);
+      NumChannels=4;
+    } else if(POT=="pXim_HALQCDPaper2020"){
+      //#,#,POT_ID,POT_FLAG,t_tot,t1,t2,s,l,j
+      double PotParsI0S0[9]={pXim_HALQCDPaper2020,24,0,-1,1,0,0,0,0};//I0S0 //put t=24 to have NO jackknife
+      double PotParsI0S1[9]={pXim_HALQCDPaper2020,24,0,-1,1,1,0,1,0};//I0S1
+      double PotParsI1S0[9]={pXim_HALQCDPaper2020,24,1,1,1,0,0,0,0};//I1S0
+      double PotParsI1S1[9]={pXim_HALQCDPaper2020,24,1,1,1,1,0,1,0};//I1S1
+      cPotParsI0S0 = new CATSparameters(CATSparameters::tPotential,9,true); cPotParsI0S0->SetParameters(PotParsI0S0);
+      cPotParsI0S1 = new CATSparameters(CATSparameters::tPotential,9,true); cPotParsI0S1->SetParameters(PotParsI0S1);
+      cPotParsI1S0 = new CATSparameters(CATSparameters::tPotential,9,true); cPotParsI1S0->SetParameters(PotParsI1S0);
+      cPotParsI1S1 = new CATSparameters(CATSparameters::tPotential,9,true); cPotParsI1S1->SetParameters(PotParsI1S1);
+      NumChannels=4;
+    }
+    else{
+        printf("\033[1;31mERROR:\033[0m Non-existing pXim potential '%s'\n",POT.Data());
+        goto CLEAN_SetUpCats_pp;
+//        goto CLEAN_SetUpCats_pL;
+    }
+
+    Kitty.SetMomentumDependentSource(false);
+    Kitty.SetThetaDependentSource(false);
+    Kitty.SetExcludeFailedBins(false);
+
+    if(Coulomb==true)Kitty.SetQ1Q2(-1);
+    else if(Coulomb==false)Kitty.SetQ1Q2(0);
+    Kitty.SetPdgId(2212, 3312);
+    Kitty.SetRedMass( (Mass_p*Mass_Xim)/(Mass_p+Mass_Xim) );
+    Kitty.SetNumChannels(NumChannels);
+    Kitty.SetNumPW(0,1);//only S waves
+    Kitty.SetNumPW(1,1);
+    Kitty.SetNumPW(2,1);
+    Kitty.SetNumPW(3,1);
+    Kitty.SetSpin(0,0);
+    Kitty.SetSpin(1,1);
+    Kitty.SetSpin(2,0);
+    Kitty.SetSpin(3,1);
+    Kitty.SetChannelWeight(0, 1./8.);//always factor 1/2 from isospin
+    Kitty.SetChannelWeight(1, 3./8.);
+    Kitty.SetChannelWeight(2, 1./8.);
+    Kitty.SetChannelWeight(3, 3./8.);
+
+    if(cPotParsI0S0) Kitty.SetShortRangePotential(0,0,fDlmPot,*cPotParsI0S0);
+    if(cPotParsI0S1) Kitty.SetShortRangePotential(1,0,fDlmPot,*cPotParsI0S1);
+    if(cPotParsI1S0) Kitty.SetShortRangePotential(2,0,fDlmPot,*cPotParsI1S0);
+    if(cPotParsI1S1) Kitty.SetShortRangePotential(3,0,fDlmPot,*cPotParsI1S1);
+
+
+    CLEAN_SetUpCats_pp: ;
+//    CLEAN_SetUpCats_pL: ;
+    if(cPars){delete cPars; cPars=NULL;}
+    if(pPars){delete pPars; pPars=NULL;}
+    //if(CleverLevy){delete CleverLevy; CleverLevy=NULL;}
+    if(cPotParsI0S0){delete cPotParsI0S0; cPotParsI0S0=NULL;}
+    if(cPotParsI0S1){delete cPotParsI0S1; cPotParsI0S1=NULL;}
+    if(cPotParsI1S0){delete cPotParsI1S0; cPotParsI1S0=NULL;}
+    if(cPotParsI1S1){delete cPotParsI1S1; cPotParsI1S1=NULL;}
+}
+
+
+
+void DLM_CommonAnaFunctions::SetUpCats_pOmega_Review(CATS& Kitty, const TString& POT, const TString& SOURCE, const bool Coulomb){
+    CATSparameters* cPars = NULL;
+    CATSparameters* pPars = NULL;
+
+    CATSparameters* cPotPars5S2 = NULL;
+    CATSparameters* cPotPars3S1 = NULL;
+
+
+    unsigned NumChannels=0;
+
+    if(SOURCE=="Gauss"){
+        cPars = new CATSparameters(CATSparameters::tSource,1,true);
+        cPars->SetParameter(0,0.948);
+        Kitty.SetAnaSource(GaussSource, *cPars);
+        Kitty.SetUseAnalyticSource(true);
+    } else{
+          printf("\033[1;31mERROR:\033[0m Non-existing source '%s'\n",SOURCE.Data());
+          goto CLEAN_SetUpCats_pp;
+      }
+
+
+    if(POT=="pOmega_Lattice"){
+      //#,#,POT_ID,POT_FLAG,t_tot,t1,t2,s,l,j
+      //                        DlmPot,DlmPotFlag,IsoSpin,t2p1,t2p2,Spin,AngMom,TotMom,Radius,OtherPars
+      double PotPars5S2[9]={pOmega_Lattice,12,0,1/2,0,2,0,2,0};
+      cPotPars5S2 = new CATSparameters(CATSparameters::tPotential,9,true); cPotPars5S2->SetParameters(PotPars5S2);
+      NumChannels=1;
+    }else if(POT=="STARVI_NOBS"){
+      double PotPars5S2[9]={pOmega_Lattice,121,0,1/2,0,2,0,2,0};
+      cPotPars5S2 = new CATSparameters(CATSparameters::tPotential,9,true); cPotPars5S2->SetParameters(PotPars5S2);
+      NumChannels=1;
+    }else if(POT=="STARVII_Loose"){
+      double PotPars5S2[9]={pOmega_Lattice,122,0,1/2,0,2,0,2,0};
+      cPotPars5S2 = new CATSparameters(CATSparameters::tPotential,9,true); cPotPars5S2->SetParameters(PotPars5S2);
+      NumChannels=1;
+    }else if(POT=="STARVIII_Deep"){
+      double PotPars5S2[9]={pOmega_Lattice,123,0,1/2,0,2,0,2,0};
+      cPotPars5S2 = new CATSparameters(CATSparameters::tPotential,9,true); cPotPars5S2->SetParameters(PotPars5S2);
+      NumChannels=1;
+    }
+
+    else{
+        printf("\033[1;31mERROR:\033[0m Non-existing pOmega potential '%s'\n",POT.Data());
+        goto CLEAN_SetUpCats_pp;
+//        goto CLEAN_SetUpCats_pL;
+    }
+
+    Kitty.SetMomentumDependentSource(false);
+    Kitty.SetThetaDependentSource(false);
+    Kitty.SetExcludeFailedBins(false);
+
+    if(Coulomb==true)Kitty.SetQ1Q2(-1);
+    else if(Coulomb==false)Kitty.SetQ1Q2(0);
+    Kitty.SetPdgId(2212, 3334);
+    Kitty.SetRedMass( (Mass_p*Mass_Omega)/(Mass_p+Mass_Omega) );
+    Kitty.SetNumChannels(NumChannels);
+    Kitty.SetNumPW(0,1);//only S waves
+    Kitty.SetChannelWeight(0, 1.);//always factor 1/2 from isospin
+
+
+    if(cPotPars5S2) Kitty.SetShortRangePotential(0,0,fDlmPot,*cPotPars5S2);
+
+    CLEAN_SetUpCats_pp: ;
+//    CLEAN_SetUpCats_pL: ;
+    if(cPars){delete cPars; cPars=NULL;}
+    if(pPars){delete pPars; pPars=NULL;}
+    //if(CleverLevy){delete CleverLevy; CleverLevy=NULL;}
+    if(cPotPars5S2){delete cPotPars5S2; cPotPars5S2=NULL;}
+}
+
+
+
+void DLM_CommonAnaFunctions::SetUpCats_pKp_Review(CATS& Kitty, const TString& POT, const TString& SOURCE, const bool Coulomb){
+    CATSparameters* cPars = NULL;
+    CATSparameters* pPars = NULL;
+
+    CATSparameters* POT_PARS_1S0 = NULL;
+    CATSparameters* POT_PARS_3S1 = NULL;
+
+
+    unsigned NumChannels=0;
+
+    if(SOURCE=="Gauss"){
+        cPars = new CATSparameters(CATSparameters::tSource,1,true);
+        cPars->SetParameter(0,1.18);
+        Kitty.SetAnaSource(GaussSource, *cPars);
+        Kitty.SetUseAnalyticSource(true);
+    } else{
+          printf("\033[1;31mERROR:\033[0m Non-existing source '%s'\n",SOURCE.Data());
+          goto CLEAN_SetUpCats_pp;
+      }
+
+    Kitty.SetMomentumDependentSource(false);
+    Kitty.SetThetaDependentSource(false);
+    Kitty.SetExcludeFailedBins(false);
+    if(Coulomb==true)Kitty.SetQ1Q2(-1);
+    else if(Coulomb==false)Kitty.SetQ1Q2(0);
+    Kitty.SetPdgId(2212, 321);
+    Kitty.SetRedMass( (Mass_p*Mass_K)/(Mass_p+Mass_K) );
+
+    if(POT=="Isospin1"){
+      CATSparameters POT_PARS_3S1(CATSparameters::tPotential,4,true);
+      POT_PARS_3S1.SetParameter(0,1);
+      NumChannels=1;
+      Kitty.SetNumChannels(NumChannels);
+      Kitty.SetNumPW(0,1);//only S waves
+      Kitty.SetSpin(0,0);
+      Kitty.SetChannelWeight(0, 1.);
+      Kitty.SetShortRangePotential(0,0,KpProtonEquivalentPotential,POT_PARS_3S1);
+    } else if(POT=="RamonaLike"){
+      CATSparameters POT_PARS_1S0(CATSparameters::tPotential,4,true);
+      POT_PARS_1S0.SetParameter(0,0);
+      CATSparameters POT_PARS_3S1(CATSparameters::tPotential,4,true);
+      POT_PARS_3S1.SetParameter(0,1);
+      NumChannels=2;
+      Kitty.SetNumChannels(NumChannels);
+      Kitty.SetNumPW(0,1);
+      Kitty.SetNumPW(1,1);
+      Kitty.SetSpin(0,0);
+      Kitty.SetSpin(1,1);
+      Kitty.SetChannelWeight(0, 1./4.);
+      Kitty.SetChannelWeight(1, 3./4.);
+      Kitty.SetShortRangePotential(0,0,KpProtonEquivalentPotential,POT_PARS_1S0);
+      Kitty.SetShortRangePotential(1,0,KpProtonEquivalentPotential,POT_PARS_3S1);
+    }
+    else{
+        printf("\033[1;31mERROR:\033[0m Non-existing pK+ potential '%s'\n",POT.Data());
+        goto CLEAN_SetUpCats_pp;
+//        goto CLEAN_SetUpCats_pL;
+    }
+
+
+
+
+
+
+    CLEAN_SetUpCats_pp: ;
+//    CLEAN_SetUpCats_pL: ;
+    if(cPars){delete cPars; cPars=NULL;}
+    if(pPars){delete pPars; pPars=NULL;}
+    //if(CleverLevy){delete CleverLevy; CleverLevy=NULL;}
+    if(POT_PARS_3S1){delete POT_PARS_3S1; POT_PARS_3S1=NULL;}
+    if(POT_PARS_1S0){delete POT_PARS_1S0; POT_PARS_1S0=NULL;}
+}
+
+
+
+void DLM_CommonAnaFunctions::SetUpCats_pKm_Review(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& Coupled){
+    CATSparameters* cPars = NULL;
+    CATSparameters* pPars = NULL;
+
+    CATSparameters* cPotPars1S0 = NULL;
+    CATSparameters* cPotPars3S1 = NULL;
+
+    DLM_Histo<complex<double>>*** ExternalWF=NULL;
+    unsigned NumChannels=0;
+
+    if(SOURCE=="Gauss"){
+        cPars = new CATSparameters(CATSparameters::tSource,1,true);
+        cPars->SetParameter(0,1.18);
+        Kitty.SetAnaSource(GaussSource, *cPars);
+        Kitty.SetUseAnalyticSource(true);
+    }else{
+        printf("\033[1;31mERROR:\033[0m Non-existing source '%s'\n",SOURCE.Data());
+        goto CLEAN_SetUpCats_pp;
+    }
+
+//only strong
+    if(POT=="Kyoto2019CC_Strong"){
+    ExternalWF = Init_pKminus_Kyoto2019("/Users/sartozza/cernbox/Femto_Stuff_Theoreticians/KyotoModel/",Kitty,0);
+    } else if(POT=="Kyoto2019CC_StrongCoulomb"){
+    ExternalWF = Init_pKminus_Kyoto2019("/Users/sartozza/cernbox/Femto_Stuff_Theoreticians/KyotoModel/",Kitty,1);
+    }
+    else{
+        printf("\033[1;31mERROR:\033[0m Non-existing pKminus potential '%s'\n",POT.Data());
+        goto CLEAN_SetUpCats_pp;
+    }
+
+    Kitty.SetMomentumDependentSource(false);
+    Kitty.SetThetaDependentSource(false);
+    Kitty.SetExcludeFailedBins(false);
+
+    // Kitty.SetQ1Q2(0);
+    // Kitty.SetPdgId(2212, -321);
+    // Kitty.SetRedMass( (Mass_p*Mass_K)/(Mass_p+Mass_K) );
+
+//List of channels: ch 0 pKmin
+                  // ch 1 antiK0n
+                  // ch 2 π+Σmin
+                  // ch 3 πminΣ+
+                  // ch 4 π0Σ0
+                  // ch 5 π0Λ
+//Setup for calculations:
+                  // CC1: only Kminp
+                  // CC2 kminp + antiK0n (ch 0,1)
+                  // CC3 kminp + antik0n + πΣ (ch 0,1,2,3,4)
+                  // CC4 ALL
+      NumChannels = 6;
+      Kitty.SetNumChannels(NumChannels);
+
+    if(Coupled=="CC1"){
+      for(unsigned uCh=0; uCh<NumChannels; uCh++){
+        Kitty.SetExternalWaveFunction(uCh,0,ExternalWF[0][uCh][0],ExternalWF[1][uCh][0]);
+        }
+      Kitty.SetChannelWeight(0,1.);
+      Kitty.SetChannelWeight(1,0.);
+      Kitty.SetChannelWeight(2,0.);
+      Kitty.SetChannelWeight(3,0.);
+      Kitty.SetChannelWeight(4,0.);
+      Kitty.SetChannelWeight(5,0.);
+    } else if(Coupled=="CC2"){
+      for(unsigned uCh=0; uCh<NumChannels; uCh++){
+        Kitty.SetExternalWaveFunction(uCh,0,ExternalWF[0][uCh][0],ExternalWF[1][uCh][0]);
+        }
+      Kitty.SetChannelWeight(0,1.);
+      Kitty.SetChannelWeight(1,1.);
+      for(unsigned uCh=2; uCh<NumChannels; uCh++){
+        Kitty.SetChannelWeight(uCh,0.);
+        }
+    } else if(Coupled=="CC3"){
+      for(unsigned uCh=0; uCh<NumChannels; uCh++){
+        Kitty.SetExternalWaveFunction(uCh,0,ExternalWF[0][uCh][0],ExternalWF[1][uCh][0]);
+        }
+      Kitty.SetChannelWeight(0,1.);
+      Kitty.SetChannelWeight(1,1.);
+      Kitty.SetChannelWeight(2,1.);
+      Kitty.SetChannelWeight(3,1.);
+      Kitty.SetChannelWeight(4,1.);
+      Kitty.SetChannelWeight(5,0.);
+    } else if(Coupled=="CC4"){
+      for(unsigned uCh=0; uCh<NumChannels; uCh++){
+        Kitty.SetExternalWaveFunction(uCh,0,ExternalWF[0][uCh][0],ExternalWF[1][uCh][0]);
+        }
+      Kitty.SetChannelWeight(0,1.);
+      Kitty.SetChannelWeight(1,1.);
+      Kitty.SetChannelWeight(2,1.);
+      Kitty.SetChannelWeight(3,1.);
+      Kitty.SetChannelWeight(4,1.);
+      Kitty.SetChannelWeight(5,1.);
+    }
+
+    CLEAN_SetUpCats_pp: ;
+//    CLEAN_SetUpCats_pL: ;
+    if(cPars){delete cPars; cPars=NULL;}
+    if(pPars){delete pPars; pPars=NULL;}
+    //if(CleverLevy){delete CleverLevy; CleverLevy=NULL;}
+    if(cPotPars1S0){delete cPotPars1S0; cPotPars1S0=NULL;}
+    if(cPotPars3S1){delete cPotPars3S1; cPotPars3S1=NULL;}
+
+}
+
+void DLM_CommonAnaFunctions::SetUpCats_pL_Review(CATS& Kitty, const TString& POT, const TString& SOURCE, const TString& Coupled){
+
+      printf("---debug 2-----\n");
+    CATSparameters* cPars = NULL;
+    CATSparameters* pPars = NULL;
+
+    CATSparameters* cPotPars1S0 = NULL;
+    CATSparameters* cPotPars3S1 = NULL;
+
+    DLM_Histo<complex<double>>*** ExternalWF=NULL;
+    unsigned NumChannels=0;
+
+    if(SOURCE=="Gauss"){
+        cPars = new CATSparameters(CATSparameters::tSource,1,true);
+        cPars->SetParameter(0,1.18);
+        Kitty.SetAnaSource(GaussSource, *cPars);
+        Kitty.SetUseAnalyticSource(true);
+    }else{
+        printf("\033[1;31mERROR:\033[0m Non-existing source '%s'\n",SOURCE.Data());
+        goto CLEAN_SetUpCats_pp;
+    }
+
+//only strong
+      printf("---debug 3-----\n");
+
+    if(POT=="NLO13"){
+    ExternalWF = Init_pL_Haidenbauer2019("/Users/sartozza/cernbox/Femto_Stuff_Theoreticians/Haidenbauer/pLambda_Coupled_SD/",Kitty,0,600);
+    printf("Evaluating for NLO13\n");
+    NumChannels = 16;
+    } else if(POT=="NLO19"){
+    ExternalWF = Init_pL_Haidenbauer2019("/Users/sartozza/cernbox/Femto_Stuff_Theoreticians/Haidenbauer/pLambda_Coupled_SD/",Kitty,1,600);
+    NumChannels = 16;
+    } else if(POT=="LO13"){
+    ExternalWF = Init_pL_Haidenbauer2019("/Users/sartozza/cernbox/Femto_Stuff_Theoreticians/Haidenbauer/pLambda_Coupled_SD/",Kitty,-1,600);
+    NumChannels = 16;
+    }
+    else{
+        printf("\033[1;31mERROR:\033[0m Non-existing pL potential '%s'\n",POT.Data());
+        goto CLEAN_SetUpCats_pp;
+    }
+
+    Kitty.SetMomentumDependentSource(false);
+    Kitty.SetThetaDependentSource(false);
+    Kitty.SetExcludeFailedBins(false);
+
+    Kitty.SetQ1Q2(0);
+    Kitty.SetPdgId(2212, 3122);
+    Kitty.SetRedMass( (Mass_p*Mass_L)/(Mass_p+Mass_L) );
+    //LIST OF CHANNELS:
+    //main channels:
+    //0: 1S0+1P1
+    //1: 3S1+3P0+3D1
+    //2: 3S1+3P1+3D1
+    //3: 3S1+3P2+3D1
+    //4: 3S1+3P0
+    //5: 3S1+3P1
+    //6: 3S1+3P2
+
+    //9: 3S1 LN(d) -> LN(s) -> PW=0
+    //14: 3D1 LN(s) -> LN(d) -> PW=0
+    //coupled channels:
+    //7: 1S0 SN(s) -> LN(s) use PW=0
+    //8: 3S1 SN(s) -> LN(s)
+    //10: 3S1 SN(d) -> LN(s)
+    //11: 3P0 SN(p) -> LN(p)
+    //12: 3P2 SN(p) -> LN(p)
+    //13: 3D1 SN(d) -> LN(d)
+    //15: 3D1 SN(s) -> LN(d)
+
+    //Talking with Dimi, so basically we only take S and D waves since P waves contrib are negligible
+    Kitty.SetNumChannels(NumChannels);
+    if(Coupled=="CC1"){
+      //only pΛ s,d waves
+          Kitty.SetExternalWaveFunction(0,0,ExternalWF[0][0][0],ExternalWF[1][0][0]);
+          for (unsigned uCh=1;uCh<=3;uCh++){//3S1 +3P +3D1
+          Kitty.SetExternalWaveFunction(uCh,0,ExternalWF[0][uCh][0],ExternalWF[1][uCh][0]);
+          Kitty.SetExternalWaveFunction(uCh,2,ExternalWF[0][uCh][2],ExternalWF[1][uCh][2]);
+        }
+        for (unsigned uCh=4;uCh<=6;uCh++){//3S1 +3P +3D1
+          Kitty.SetExternalWaveFunction(uCh,0,ExternalWF[0][uCh][0],ExternalWF[1][uCh][0]);
+        }
+        for(unsigned uCh=7;uCh<NumChannels;uCh++){//3S1 +3P +
+        if(uCh==11 || uCh==12) continue;
+          Kitty.SetExternalWaveFunction(uCh,0,ExternalWF[0][uCh][0],ExternalWF[1][uCh][0]);
+        }
+      //setting coupling to ΣN to zero
+      Kitty.SetChannelWeight(7,0.);
+      Kitty.SetChannelWeight(8,0.);
+      Kitty.SetChannelWeight(10,0.);
+      Kitty.SetChannelWeight(11,0.);
+      Kitty.SetChannelWeight(12,0.);
+      Kitty.SetChannelWeight(13,0.);
+      Kitty.SetChannelWeight(15,0.);
+    }
+
+    else if(Coupled=="CC2"){//with NΣ
+          Kitty.SetExternalWaveFunction(0,0,ExternalWF[0][0][0],ExternalWF[1][0][0]);
+
+          for (unsigned uCh=1;uCh<=3;uCh++){//3S1 +3P +3D1
+          Kitty.SetExternalWaveFunction(uCh,0,ExternalWF[0][uCh][0],ExternalWF[1][uCh][0]);
+          Kitty.SetExternalWaveFunction(uCh,2,ExternalWF[0][uCh][2],ExternalWF[1][uCh][2]);
+        }
+        for (unsigned uCh=4;uCh<=6;uCh++){//3S1 +3P +3D1
+          Kitty.SetExternalWaveFunction(uCh,0,ExternalWF[0][uCh][0],ExternalWF[1][uCh][0]);
+        }
+        for(unsigned uCh=7;uCh<NumChannels;uCh++){
+          if(uCh==11 || uCh==12) continue;
+          Kitty.SetExternalWaveFunction(uCh,0,ExternalWF[0][uCh][0],ExternalWF[1][uCh][0]);
+        }
+    }
+
+    CLEAN_SetUpCats_pp: ;
+//    CLEAN_SetUpCats_pL: ;
+    if(cPars){delete cPars; cPars=NULL;}
+    if(pPars){delete pPars; pPars=NULL;}
+    //if(CleverLevy){delete CleverLevy; CleverLevy=NULL;}
+    if(cPotPars1S0){delete cPotPars1S0; cPotPars1S0=NULL;}
+    if(cPotPars3S1){delete cPotPars3S1; cPotPars3S1=NULL;}
+
+}
+
+
+
 
 //----------------------SETTING UP BINNING---------------------------
 void DLM_CommonAnaFunctions::SetUpBinning_pAp(const TString& DataSample, unsigned& NumMomBins, double*& MomBins, double*& FitRegion){
@@ -1520,7 +2064,7 @@ void DLM_CommonAnaFunctions::GetPurities_Xim(const TString& DataSample, const in
 }
 
 //no variations are possible
-void DLM_CommonAnaFunctions::GetFractions_Ap(const TString& DataSample, const int& Variation, double* Fractions){
+void DLM_CommonAnaFunctions::GetFractions_Ap(const TString& DataSample, const int& Variation, double* Fractions, bool PrintOutput){
   //following my lambda pars with the 3 possible modifications
   //for the proton:
   //0 = primary
@@ -1565,14 +2109,16 @@ void DLM_CommonAnaFunctions::GetFractions_Ap(const TString& DataSample, const in
   Fractions[3] = 1.;
   // printf("--------------------------------------------------------------\n");
   // printf("---------------DATASample analysed = %s-----------------------\n",DataSample.Data());
-  printf("-----------------------ANTIPROTONS----------------------------\n");
-      printf("Modify_pAp = %.1f ---- Modify_pAp = %.1f\n",Modify_pAp,Modify_pAp);
-  printf("Fractions of primaries = %.3f\n", Fractions[0]);
-  printf("Fractions of Sec.from Λ = %.3f\n", Fractions[1]);
-  printf("Fractions of Sec.from Σ+ = %.3f\n", Fractions[2]);
+  if(PrintOutput){
+    printf("-----------------------ANTIPROTONS----------------------------\n");
+    printf("Modify_pAp = %.1f ---- Modify_pAp = %.1f\n",Modify_pAp,Modify_pAp);
+    printf("Fractions of primaries = %.3f\n", Fractions[0]);
+    printf("Fractions of Sec.from Λ = %.3f\n", Fractions[1]);
+    printf("Fractions of Sec.from Σ+ = %.3f\n", Fractions[2]);
+  }
 
 }
-void DLM_CommonAnaFunctions::GetFractions_p(const TString& DataSample, const int& Variation, double* Fractions){
+void DLM_CommonAnaFunctions::GetFractions_p(const TString& DataSample, const int& Variation, double* Fractions, bool PrintOutput){
     //following my lambda pars with the 3 possible modifications
     //for the proton:
     //0 = primary
@@ -1627,18 +2173,19 @@ void DLM_CommonAnaFunctions::GetFractions_p(const TString& DataSample, const int
     Fractions[3] = 1.;
     // printf("--------------------------------------------------------------\n");
     // printf("---------------DATASample analysed = %s-----------------------\n",DataSample.Data());
-    printf("-----------------------PROTONS--------------------------------\n");
+    if (PrintOutput){
+      printf("-----------------------PROTONS--------------------------------\n");
       printf("Modify_pp = %.1f ---- Modify_pp = %.1f\n",Modify_pp,Modify_pp);
-     printf("Fractions of primaries = %.3f\n", Fractions[0]);
-     printf("Fractions of Sec.from Λ = %.3f\n", Fractions[1]);
-     printf("Fractions of Sec.from Σ+ = %.3f\n", Fractions[2]);
-
+      printf("Fractions of primaries = %.3f\n", Fractions[0]);
+      printf("Fractions of Sec.from Λ = %.3f\n", Fractions[1]);
+      printf("Fractions of Sec.from Σ+ = %.3f\n", Fractions[2]);
+    }
 }
 //Variation -> use the two digits
 //first digit->Modify_SigL
 //second digit->Modify_XiL
 //0 -> default; 1 = -20%; 2 = +20%
-void DLM_CommonAnaFunctions::GetFractions_AL(const TString& DataSample, const int& Variation, double* Fractions){
+void DLM_CommonAnaFunctions::GetFractions_AL(const TString& DataSample, const int& Variation, double* Fractions, bool PrintOutput){
   double Modify_SigAL;
   double Modify_XiAL;
   switch(Variation%10){
@@ -1696,22 +2243,24 @@ void DLM_CommonAnaFunctions::GetFractions_AL(const TString& DataSample, const in
   Fractions[4] = 1.;
   // printf("--------------------------------------------------------------\n");
   // printf("---------------DATASample analysed = %s-----------------------\n",DataSample.Data());
-  printf("-----------------------ANTILAMBDAS FRACTIONS----------------------------\n");
-      printf("Modify_SigL = %.1f ---- Modify_XiL = %.1f\n",Modify_SigAL,Modify_XiAL);
-  printf("Fractions of primaries = %.3f\n", Fractions[0]);
-  printf("Fractions of Sec.from Σ0 = %.3f\n", Fractions[1]);
-  printf("Fractions of Sec.from Ξm0 = %.3f\n", Fractions[2]);
-  std::cout<<"Fractions for Lambdabar:\n"<<std::endl;
-  std::cout<<"Primaries = "<<Fractions[0]<<std::endl;
-  std::cout<<"From Sigma0 = "<<Fractions[1]<<std::endl;
-  std::cout<<"From Xim = "<<Fractions[2]<<std::endl;
-  std::cout<<"Flat feed = "<<Fractions[3]<<std::endl;
-  std::cout<<"MisID = "<<Fractions[4]<<std::endl;
-  std::cout<<"----------------------------\n"<<std::endl;
+  if(PrintOutput){
+    printf("-----------------------ANTILAMBDAS FRACTIONS----------------------------\n");
+    printf("Modify_SigL = %.1f ---- Modify_XiL = %.1f\n",Modify_SigAL,Modify_XiAL);
+    printf("Fractions of primaries = %.3f\n", Fractions[0]);
+    printf("Fractions of Sec.from Σ0 = %.3f\n", Fractions[1]);
+    printf("Fractions of Sec.from Ξm0 = %.3f\n", Fractions[2]);
+    std::cout<<"Fractions for Lambdabar:\n"<<std::endl;
+    std::cout<<"Primaries = "<<Fractions[0]<<std::endl;
+    std::cout<<"From Sigma0 = "<<Fractions[1]<<std::endl;
+    std::cout<<"From Xim = "<<Fractions[2]<<std::endl;
+    std::cout<<"Flat feed = "<<Fractions[3]<<std::endl;
+    std::cout<<"MisID = "<<Fractions[4]<<std::endl;
+    std::cout<<"----------------------------\n"<<std::endl;
+  }
 
 }
 
-void DLM_CommonAnaFunctions::GetFractions_L(const TString& DataSample, const int& Variation, double* Fractions){
+void DLM_CommonAnaFunctions::GetFractions_L(const TString& DataSample, const int& Variation, double* Fractions, bool PrintOuput){
     double Modify_SigL;
     double Modify_XiL;
     switch(Variation%10){
@@ -1784,6 +2333,7 @@ void DLM_CommonAnaFunctions::GetFractions_L(const TString& DataSample, const int
     Fractions[4] = 1.;
     // printf("--------------------------------------------------------------\n");
     // printf("---------------DATASample analysed = %s-----------------------\n",DataSample.Data());
+    if (PrintOuput){
     printf("-----------------------LAMBDAS FRACTIONS--------------------------------\n");
     printf("Modify_SigL = %.1f ---- Modify_XiL = %.1f\n",Modify_SigL,Modify_XiL);
     printf("Fractions of primaries = %.3f\n", Fractions[0]);
@@ -1796,6 +2346,7 @@ void DLM_CommonAnaFunctions::GetFractions_L(const TString& DataSample, const int
     std::cout<<"Flat feed = "<<Fractions[3]<<std::endl;
     std::cout<<"MisID = "<<Fractions[4]<<std::endl;
     std::cout<<"----------------------------\n"<<std::endl;
+    }
 
 }
 void DLM_CommonAnaFunctions::GetFractions_Xim(const TString& DataSample, const int& Variation, double* Fractions){
@@ -1826,19 +2377,20 @@ void DLM_CommonAnaFunctions::GetFractions_Xim(const TString& DataSample, const i
 //2 is flat feed
 //3 is missid
 
-void DLM_CommonAnaFunctions::SetUpLambdaPars_pAp(const TString& DataSample, const int& Variation_p, const int& Variation_Ap, double* lambda_pars){
+void DLM_CommonAnaFunctions::SetUpLambdaPars_pAp(const TString& DataSample, const int& Variation_p, const int& Variation_Ap, double* lambda_pars, bool PrintOutput){
   double Purities_Ap[4];
   double Fraction_Ap[4];
   double Purities_p[4];
   double Fraction_p[4];
   GetPurities_Ap(DataSample,Variation_Ap,Purities_Ap);
-  GetFractions_Ap(DataSample,Variation_Ap,Fraction_Ap);
+  GetFractions_Ap(DataSample,Variation_Ap,Fraction_Ap,PrintOutput);
   GetPurities_p(DataSample,Variation_p,Purities_p);
-  GetFractions_p(DataSample,Variation_p,Fraction_p);
+  GetFractions_p(DataSample,Variation_p,Fraction_p,PrintOutput);
   lambda_pars[0] = Purities_Ap[0]*Fraction_Ap[0]*Purities_p[0]*Fraction_p[0];
   lambda_pars[1] = Purities_Ap[0]*Fraction_Ap[0]*Purities_p[1]*Fraction_p[1]+Purities_Ap[1]*Fraction_Ap[1]*Purities_p[0]*Fraction_p[0];
   lambda_pars[3] = Purities_Ap[0]*Fraction_Ap[0]*Purities_p[3]*Fraction_Ap[3]+Purities_Ap[3]*Fraction_Ap[3]*Purities_p[0]*Fraction_Ap[0];
   lambda_pars[2] = 1.-lambda_pars[3]-lambda_pars[1]-lambda_pars[0];
+  if(PrintOutput){
   std::cout<<"Lambda parameters for ppbar:\n"<<std::endl;
   std::cout<<"Primaries = "<<lambda_pars[0]<<std::endl;
   std::cout<<"From Lambda = "<<lambda_pars[1]<<std::endl;
@@ -1847,7 +2399,7 @@ void DLM_CommonAnaFunctions::SetUpLambdaPars_pAp(const TString& DataSample, cons
   std::cout<<"-----------------------------\n"<<std::endl;
   std::cout<<"-----------------------------\n"<<std::endl;
   std::cout<<"TOT.ppbar= "<<lambda_pars[0]+lambda_pars[1]+lambda_pars[2]+lambda_pars[3]<<std::endl;
-
+  }
 }
 
 //0 is primary
@@ -1879,15 +2431,15 @@ void DLM_CommonAnaFunctions::SetUpLambdaPars_pp(const TString& DataSample, const
 //2 is pXim->pL
 //3 is the flat feeddown
 //4 is missid
-void DLM_CommonAnaFunctions::SetUpLambdaPars_pAL(const TString& DataSample, const int& Variation_p, const int& Variation_AL, double* lambda_pars){
+void DLM_CommonAnaFunctions::SetUpLambdaPars_pAL(const TString& DataSample, const int& Variation_p, const int& Variation_AL, double* lambda_pars, bool PrintOutput){
   double Purities_p[4];
   double Fraction_p[4];
   double Purities_AL[5];
   double Fraction_AL[5];
   GetPurities_p(DataSample,Variation_p,Purities_p);
-  GetFractions_p(DataSample,Variation_p,Fraction_p);
+  GetFractions_p(DataSample,Variation_p,Fraction_p,PrintOutput);
   GetPurities_AL(DataSample,Variation_AL,Purities_AL);
-  GetFractions_AL(DataSample,Variation_AL,Fraction_AL);
+  GetFractions_AL(DataSample,Variation_AL,Fraction_AL,PrintOutput);
 
 
 
@@ -1902,6 +2454,7 @@ void DLM_CommonAnaFunctions::SetUpLambdaPars_pAL(const TString& DataSample, cons
                       Purities_p[2]*Fraction_p[2]*Purities_AL[4]*Fraction_AL[4]+
                       Purities_p[3]*Fraction_p[3]*Purities_AL[4]*Fraction_AL[4];
   lambda_pars[4] =    1.-lambda_pars[0]-lambda_pars[1]-lambda_pars[2]-lambda_pars[3]-lambda_pars[5];
+  if(PrintOutput){
   std::cout<<"Lambda parameters for pLbar:\n"<<std::endl;
   std::cout<<"Primaries = "<<lambda_pars[0]<<std::endl;
   std::cout<<"From Sigma0 = "<<lambda_pars[1]<<std::endl;
@@ -1912,7 +2465,7 @@ void DLM_CommonAnaFunctions::SetUpLambdaPars_pAL(const TString& DataSample, cons
   std::cout<<"-----------------------------\n"<<std::endl;
   std::cout<<"-----------------------------\n"<<std::endl;
   std::cout<<"TOT.pLbar= "<<lambda_pars[0]+lambda_pars[1]+lambda_pars[2]+lambda_pars[3]+lambda_pars[4]+lambda_pars[5]<<std::endl;
-
+  }
 }
 
 void DLM_CommonAnaFunctions::SetUpLambdaPars_pL(const TString& DataSample, const int& Variation_p, const int& Variation_L, double* lambda_pars){
@@ -1942,31 +2495,33 @@ void DLM_CommonAnaFunctions::SetUpLambdaPars_pL(const TString& DataSample, const
 //2 is LXim->LL
 //3 is the flat feeddown
 //4 is missid
-void DLM_CommonAnaFunctions::SetUpLambdaPars_LAL(const TString& DataSample, const int& Variation_L, const int& Variation_AL, double* lambda_pars){
+void DLM_CommonAnaFunctions::SetUpLambdaPars_LAL(const TString& DataSample, const int& Variation_L, const int& Variation_AL, double* lambda_pars, bool PrintOutput){
   double Purities_L[5];
   double Fraction_L[5];
   double Purities_AL[5];
   double Fraction_AL[5];
   GetPurities_L(DataSample,Variation_L,Purities_L);
-  GetFractions_L(DataSample,Variation_L,Fraction_L);
+  GetFractions_L(DataSample,Variation_L,Fraction_L,PrintOutput);
   GetPurities_AL(DataSample,Variation_AL,Purities_AL);
-  GetFractions_AL(DataSample,Variation_AL,Fraction_AL);
+  GetFractions_AL(DataSample,Variation_AL,Fraction_AL,PrintOutput);
   lambda_pars[0] =    Purities_L[0]*Fraction_L[0]*Purities_AL[0]*Fraction_AL[0];
   lambda_pars[1] =    Purities_L[0]*Fraction_L[0]*Purities_AL[1]*Fraction_AL[1]+Purities_L[1]*Fraction_L[1]*Purities_AL[0]*Fraction_AL[0];
   lambda_pars[2] =    Purities_L[0]*Fraction_L[0]*Purities_AL[2]*Fraction_AL[2]+Purities_L[2]*Fraction_L[2]*Purities_AL[0]*Fraction_AL[0];
   lambda_pars[4] =    Purities_L[0]*Fraction_L[0]*Purities_AL[4]*Fraction_AL[4]+Purities_L[4]*Fraction_L[4]*Purities_AL[0]*Fraction_AL[0];
   lambda_pars[3] =    1.-lambda_pars[0]-lambda_pars[1]-lambda_pars[2]-lambda_pars[4];
-  std::cout<<"-----------------------------\n"<<std::endl;
-  std::cout<<"-----------------------------\n"<<std::endl;
-  std::cout<<"Lambda parameters for LLbar:\n"<<std::endl;
-  std::cout<<"Primaries = "<<lambda_pars[0]<<std::endl;
-  std::cout<<"From Sigma0 = "<<lambda_pars[1]<<std::endl;
-  std::cout<<"From Xim = "<<lambda_pars[2]<<std::endl;
-  std::cout<<"Flat feed = "<<lambda_pars[3]<<std::endl;
-  std::cout<<"TOTAL Flat feed = "<<lambda_pars[1]+lambda_pars[2]+lambda_pars[3]<<std::endl;
-  std::cout<<"MisID = "<<lambda_pars[4]<<std::endl;
-  std::cout<<"-----------------------------\n"<<std::endl;
-  std::cout<<"TOT.LLbar = "<<lambda_pars[0]+lambda_pars[1]+lambda_pars[2]+lambda_pars[3]+lambda_pars[4]<<std::endl;
+  if(PrintOutput){
+    std::cout<<"-----------------------------\n"<<std::endl;
+    std::cout<<"-----------------------------\n"<<std::endl;
+    std::cout<<"Lambda parameters for LLbar:\n"<<std::endl;
+    std::cout<<"Primaries = "<<lambda_pars[0]<<std::endl;
+    std::cout<<"From Sigma0 = "<<lambda_pars[1]<<std::endl;
+    std::cout<<"From Xim = "<<lambda_pars[2]<<std::endl;
+    std::cout<<"Flat feed = "<<lambda_pars[3]<<std::endl;
+    std::cout<<"TOTAL Flat feed = "<<lambda_pars[1]+lambda_pars[2]+lambda_pars[3]<<std::endl;
+    std::cout<<"MisID = "<<lambda_pars[4]<<std::endl;
+    std::cout<<"-----------------------------\n"<<std::endl;
+    std::cout<<"TOT.LLbar = "<<lambda_pars[0]+lambda_pars[1]+lambda_pars[2]+lambda_pars[3]+lambda_pars[4]<<std::endl;
+  }
   //
   // printf("-------debug 0-------------------\n");
 
